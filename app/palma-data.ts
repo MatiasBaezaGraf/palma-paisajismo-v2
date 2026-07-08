@@ -6,6 +6,7 @@ export type ImageAsset = {
 };
 
 export type ProjectType = {
+  slug: string;
   title: string;
   desc: string;
   image: ImageAsset;
@@ -130,41 +131,49 @@ export const images = {
 
 export const projectTypes: ProjectType[] = [
   {
+    slug: "balcones-y-terrazas-verdes",
     title: "Balcones y terrazas verdes",
     desc: "Paisajismo para espacios urbanos reducidos.",
     image: images.terraceWater,
   },
   {
+    slug: "patios-y-jardines-residenciales-de-todas-las-escalas",
     title: "Patios y jardines residenciales de todas las escalas",
     desc: "Jardines pensados para cada forma de habitar y cada escala.",
     image: images.residentialTrees,
   },
   {
+    slug: "jardines-rurales-casas-de-campo-y-paisajes-de-gran-escala",
     title: "Jardines rurales, casas de campo y paisajes de gran escala",
     desc: "Propuestas que dialogan con el paisaje y las condiciones del entorno.",
     image: images.ruralFlower,
   },
   {
+    slug: "diseno-paisajistico-para-barrios-privados-y-desarrollos-residenciales",
     title: "Diseño paisajístico para barrios privados y desarrollos residenciales",
     desc: "Diseño de espacios comunes con identidad y continuidad paisajística.",
     image: images.developmentWater,
   },
   {
+    slug: "espacios-exteriores-para-empresas-y-entornos-corporativos",
     title: "Espacios exteriores para empresas y entornos corporativos",
     desc: "Espacios exteriores que acompañan la dinámica y la imagen institucional.",
     image: images.corporateFlower,
   },
   {
+    slug: "paisajismo-para-areas-industriales-y-logisticas",
     title: "Paisajismo para áreas industriales y logísticas",
     desc: "Paisajismo funcional para entornos productivos y de circulación.",
     image: images.planTexture,
   },
   {
+    slug: "diseno-exterior-para-hoteleria-gastronomia-y-espacios-de-encuentro",
     title: "Diseño exterior para hotelería, gastronomía y espacios de encuentro",
     desc: "Atmósferas que invitan a permanecer.",
     image: images.hospitalityPlanting,
   },
   {
+    slug: "consultoria-paisajistica-para-estudios-de-arquitectura",
     title: "Consultoría paisajística para estudios de arquitectura",
     desc: "Asesoramiento y acompañamiento paisajístico en las distintas etapas del proyecto.",
     image: images.consultingFlower,

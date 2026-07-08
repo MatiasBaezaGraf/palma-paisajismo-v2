@@ -1,10 +1,9 @@
 import { images } from "../../palma-data";
-import { PrimaryButton } from "./buttons";
+import { PrimaryLink } from "./buttons";
 import { ImageFrame } from "./image-frame";
 import { BottomBar } from "./layout-parts";
-import type { NavFn } from "./types";
 
-export function PortfolioScreen({ navigate }: { navigate: NavFn }) {
+export function PortfolioScreen() {
   return (
     <div>
       <section className="relative flex min-h-[80vh] items-center overflow-hidden md:min-h-[88vh]">
@@ -22,18 +21,17 @@ export function PortfolioScreen({ navigate }: { navigate: NavFn }) {
             tanto, podés conocer los tipos de proyecto en los que trabajamos o escribirnos directamente.
           </p>
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-            <PrimaryButton onClick={() => navigate("tipos")}>Ver tipos de proyecto</PrimaryButton>
-            <button
-              type="button"
-              onClick={() => navigate("contacto")}
-              className="inline-flex min-h-12 items-center justify-center border border-white/70 px-8 py-4 text-[11px] uppercase tracking-[0.16em] text-white transition-colors hover:bg-white hover:text-[#131419]"
+            <PrimaryLink href="/que-disenamos">Ver tipos de proyecto</PrimaryLink>
+            <PrimaryLink
+              href="/contacto"
+              className="border border-white/70 bg-transparent text-white hover:bg-white hover:text-[#131419]"
             >
               Contacto
-            </button>
+            </PrimaryLink>
           </div>
         </div>
       </section>
-      <BottomBar navigate={navigate} names />
+      <BottomBar names />
     </div>
   );
 }

@@ -1,9 +1,9 @@
-import { projectTypes } from "../../palma-data";
+import Link from "next/link";
+import type { ProjectType } from "../../palma-data";
 import { ImageFrame } from "./image-frame";
 import { BottomBar, PageHeader } from "./layout-parts";
-import type { NavFn, OpenTypeFn } from "./types";
 
-export function TypesScreen({ openType, navigate }: { openType: OpenTypeFn; navigate: NavFn }) {
+export function TypesScreen({ projectTypes }: { projectTypes: ProjectType[] }) {
   return (
     <div>
       <PageHeader
@@ -12,11 +12,10 @@ export function TypesScreen({ openType, navigate }: { openType: OpenTypeFn; navi
         description="Diseñamos espacios exteriores en diferentes escalas y contextos. Cada proyecto responde a necesidades particulares, formas de habitar y características propias del lugar. Elegí una categoría para conocer cómo trabajamos cada proceso."
       />
       <div className="mx-auto max-w-[1440px] px-5 md:px-[52px]">
-        {projectTypes.map((type, index) => (
-          <button
-            type="button"
-            key={type.title}
-            onClick={() => openType(index)}
+        {projectTypes.map((type) => (
+          <Link
+            href={`/que-disenamos/${type.slug}`}
+            key={type.slug}
             className="group grid w-full cursor-pointer items-stretch gap-[18px] border-b border-[#e0ddd7] text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4a6038]/30 md:grid-cols-[5fr_7fr] md:gap-[60px]"
           >
             <div className="flex flex-col justify-center gap-3.5 py-6 md:py-0">
@@ -35,10 +34,10 @@ export function TypesScreen({ openType, navigate }: { openType: OpenTypeFn; navi
               className="h-[200px] md:h-60"
               imgClassName="transition-transform duration-700 group-hover:scale-[1.06]"
             />
-          </button>
+          </Link>
         ))}
       </div>
-      <BottomBar navigate={navigate} />
+      <BottomBar />
     </div>
   );
 }

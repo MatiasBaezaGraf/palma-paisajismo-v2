@@ -43,6 +43,7 @@ export function ContactScreen() {
             image={images.founders}
             className="h-[200px] md:h-[220px]"
             imgClassName="object-[center_20%]"
+            priority
           />
         </div>
 

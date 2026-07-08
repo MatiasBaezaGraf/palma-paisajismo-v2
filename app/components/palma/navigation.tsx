@@ -1,30 +1,31 @@
 "use client";
 
-import { useState } from "react";
-import { OutlineButton, TextButton } from "./buttons";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { OutlineLink, TextLink } from "./buttons";
 import { LogoFull } from "./logo";
-import type { NavFn, Page } from "./types";
 
-export function Nav({
-  page,
-  navigate,
-  navScrolled,
-}: {
-  page: Page;
-  navigate: NavFn;
-  navScrolled: boolean;
-}) {
+const links = [
+  { href: "/que-disenamos", labels: ["Qué diseñamos", "Áreas de trabajo"] },
+  { href: "/proyectos", labels: ["Proyectos", "Proyectos"] },
+  { href: "/metodologia", labels: ["Metodología", "Metodología"] },
+];
+
+export function Nav() {
+  const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [labelIndex, setLabelIndex] = useState(0);
-  const label = ["Qué diseñamos", "Áreas de trabajo"][labelIndex];
+  const [navScrolled, setNavScrolled] = useState(false);
 
-  const go = (target: Page) => {
-    setMenuOpen(false);
-    navigate(target);
-  };
+  useEffect(() => {
+    const update = () => setNavScrolled(window.scrollY > 60);
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, []);
 
-  const navButtonClass = (target: Page) =>
-    page === target ? "text-[#4a6038]" : "text-[#131419]";
+  const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   return (
     <nav
@@ -33,20 +34,22 @@ export function Nav({
       }`}
     >
       <div className="flex items-center justify-between px-5 py-4 md:px-[52px]">
-        <button
-          type="button"
-          onClick={() => go("home")}
+        <Link
+          href="/"
           aria-label="Ir al inicio"
           className="flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4a6038]/35"
         >
           <LogoFull className="h-[42px]" />
-        </button>
+        </Link>
 
         <div className="hidden items-center gap-8 md:flex">
           <div className="relative inline-flex flex-col items-center">
-            <TextButton onClick={() => go("tipos")} className={navButtonClass("tipos")}>
-              {label}
-            </TextButton>
+            <TextLink
+              href="/que-disenamos"
+              className={isActive("/que-disenamos") ? "text-[#4a6038]" : "text-[#131419]"}
+            >
+              {links[0].labels[labelIndex]}
+            </TextLink>
             <button
               type="button"
               onClick={() => setLabelIndex((current) => (current + 1) % 2)}
@@ -56,15 +59,14 @@ export function Nav({
               ↻
             </button>
           </div>
-          <TextButton onClick={() => go("portfolio")} className={navButtonClass("portfolio")}>
-            Proyectos
-          </TextButton>
-          <TextButton onClick={() => go("metodologia")} className={navButtonClass("metodologia")}>
-            Metodología
-          </TextButton>
-          <OutlineButton onClick={() => go("contacto")} className="min-h-0 px-5 py-2 tracking-[0.14em]">
+          {links.slice(1).map((link) => (
+            <TextLink key={link.href} href={link.href} className={isActive(link.href) ? "text-[#4a6038]" : ""}>
+              {link.labels[0]}
+            </TextLink>
+          ))}
+          <OutlineLink href="/contacto" className="min-h-0 px-5 py-2 tracking-[0.14em]">
             Contacto
-          </OutlineButton>
+          </OutlineLink>
         </div>
 
         <button
@@ -81,9 +83,9 @@ export function Nav({
       {menuOpen ? (
         <div className="flex flex-col gap-5 border-t border-[#e0ddd7] bg-[#f9f7f4]/98 px-5 py-6 md:hidden">
           <div className="flex items-center gap-3">
-            <TextButton onClick={() => go("tipos")} className="text-[13px]">
-              {label}
-            </TextButton>
+            <TextLink href="/que-disenamos" onClick={() => setMenuOpen(false)} className="text-[13px]">
+              {links[0].labels[labelIndex]}
+            </TextLink>
             <button
               type="button"
               onClick={() => setLabelIndex((current) => (current + 1) % 2)}
@@ -93,15 +95,14 @@ export function Nav({
               ↻
             </button>
           </div>
-          <TextButton onClick={() => go("portfolio")} className="text-[13px]">
-            Proyectos
-          </TextButton>
-          <TextButton onClick={() => go("metodologia")} className="text-[13px]">
-            Metodología
-          </TextButton>
-          <TextButton onClick={() => go("contacto")} className="text-[13px]">
+          {links.slice(1).map((link) => (
+            <TextLink key={link.href} href={link.href} onClick={() => setMenuOpen(false)} className="text-[13px]">
+              {link.labels[0]}
+            </TextLink>
+          ))}
+          <TextLink href="/contacto" onClick={() => setMenuOpen(false)} className="text-[13px]">
             Contacto
-          </TextButton>
+          </TextLink>
         </div>
       ) : null}
     </nav>

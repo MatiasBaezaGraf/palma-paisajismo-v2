@@ -1,5 +1,13 @@
-import PalmaSite from "./components/palma/palma-site";
+import { HomeScreen } from "./components/palma/home-screen";
+import { SiteShell } from "./components/palma/site-shell";
+import { getHomeImages, getProjectTypes } from "./lib/content";
 
-export default function Home() {
-  return <PalmaSite />;
+export default async function Home() {
+  const [homeImages, projectTypes] = await Promise.all([getHomeImages(), getProjectTypes()]);
+
+  return (
+    <SiteShell>
+      <HomeScreen homeImages={homeImages} projectTypes={projectTypes} />
+    </SiteShell>
+  );
 }

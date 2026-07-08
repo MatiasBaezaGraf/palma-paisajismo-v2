@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
-import { OutlineButton, PrimaryButton, TextButton } from "./buttons";
+import { OutlineLink, PrimaryLink, TextLink } from "./buttons";
 import { LogoFull } from "./logo";
-import type { NavFn } from "./types";
 
 export function PageHeader({
   eyebrow,
@@ -31,12 +30,12 @@ export function Cta({
   title,
   description,
   button,
-  onClick,
+  href,
 }: {
   title: string;
   description?: string;
   button: string;
-  onClick: () => void;
+  href: string;
 }) {
   return (
     <section className="mx-5 mt-14 flex flex-col items-start gap-6 bg-[#e6e3cc] px-6 py-12 md:mx-[52px] md:mt-[100px] md:flex-row md:items-center md:justify-between md:gap-16 md:px-[60px] md:py-[72px]">
@@ -48,19 +47,17 @@ export function Cta({
           <p className="mt-3 text-sm font-light leading-[1.7] text-[#493f2c]">{description}</p>
         ) : null}
       </div>
-      <PrimaryButton onClick={onClick} className="w-full shrink-0 md:w-auto">
+      <PrimaryLink href={href} className="w-full shrink-0 md:w-auto">
         {button}
-      </PrimaryButton>
+      </PrimaryLink>
     </section>
   );
 }
 
 export function BottomBar({
-  navigate,
   backToTypes = false,
   names = false,
 }: {
-  navigate: NavFn;
   backToTypes?: boolean;
   names?: boolean;
 }) {
@@ -68,30 +65,30 @@ export function BottomBar({
     <div className="mt-[60px] border-t border-[#e0ddd7]">
       <div className="mx-auto flex max-w-[1440px] flex-col gap-5 px-5 py-8 md:flex-row md:items-center md:justify-between md:px-[52px]">
         {backToTypes ? (
-          <TextButton onClick={() => navigate("tipos")} className="text-[#a9a79c]">
+          <TextLink href="/que-disenamos" className="text-[#a9a79c]">
             ← Tipos de proyecto
-          </TextButton>
+          </TextLink>
         ) : (
           <LogoFull className="h-9 md:h-12" />
         )}
         {names ? (
           <p className="text-xs font-light text-[#a9a79c]">Isabella de Sousa · Heidi Ignatov</p>
         ) : null}
-        <OutlineButton onClick={() => navigate("contacto")}>Contacto</OutlineButton>
+        <OutlineLink href="/contacto">Contacto</OutlineLink>
       </div>
     </div>
   );
 }
 
-export function SiteFooter({ navigate }: { navigate: NavFn }) {
+export function SiteFooter() {
   return (
     <footer className="mt-14 border-t border-[#e0ddd7] md:mt-[110px]">
       <div className="mx-auto flex max-w-[1440px] flex-col gap-5 px-5 py-10 md:flex-row md:items-center md:justify-between md:px-[52px]">
         <LogoFull className="h-14" />
         <p className="text-[13px] font-light text-[#777674]">Buenos Aires, Argentina</p>
-        <PrimaryButton onClick={() => navigate("contacto")} className="w-full md:w-auto">
+        <PrimaryLink href="/contacto" className="w-full md:w-auto">
           Escribinos
-        </PrimaryButton>
+        </PrimaryLink>
       </div>
       <div className="mx-auto max-w-[1440px] border-t border-[#ece9e4] px-5 pb-6 md:px-[52px]">
         <p className="pt-4 text-[11px] font-light text-[#c5c2bb]">

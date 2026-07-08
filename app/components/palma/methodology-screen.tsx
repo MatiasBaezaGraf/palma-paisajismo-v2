@@ -1,9 +1,8 @@
 import { images, methodSteps } from "../../palma-data";
 import { ImageFrame } from "./image-frame";
 import { BottomBar, Cta } from "./layout-parts";
-import type { NavFn } from "./types";
 
-export function MethodologyScreen({ navigate }: { navigate: NavFn }) {
+export function MethodologyScreen() {
   return (
     <div>
       <section className="relative h-[60vh] overflow-hidden md:h-[82vh]">
@@ -57,9 +56,9 @@ export function MethodologyScreen({ navigate }: { navigate: NavFn }) {
         title="¿Tenés un proyecto en mente?"
         description="Contanos sobre tu espacio y te contamos cómo podemos trabajar juntos."
         button="Contactanos"
-        onClick={() => navigate("contacto")}
+        href="/contacto"
       />
-      <BottomBar navigate={navigate} names />
+      <BottomBar names />
     </div>
   );
 }

@@ -1,16 +1,23 @@
-import { images, projectTypes } from "../../palma-data";
-import { PrimaryButton } from "./buttons";
+import Link from "next/link";
+import type { HomeImages } from "../../lib/content";
+import type { ProjectType } from "../../palma-data";
+import { PrimaryLink } from "./buttons";
 import { ImageFrame } from "./image-frame";
 import { SiteFooter } from "./layout-parts";
 import { PortfolioPreview } from "./portfolio-preview";
-import type { NavFn, OpenTypeFn } from "./types";
 
-export function HomeScreen({ navigate, openType }: { navigate: NavFn; openType: OpenTypeFn }) {
+export function HomeScreen({
+  homeImages,
+  projectTypes,
+}: {
+  homeImages: HomeImages;
+  projectTypes: ProjectType[];
+}) {
   return (
     <div>
       <section className="relative h-svh overflow-hidden">
         <ImageFrame
-          image={images.heroGarden}
+          image={homeImages.hero}
           className="absolute inset-0 animate-[scaleReveal_1.6s_ease-out_both]"
           imgClassName="object-[center_45%]"
           priority
@@ -63,12 +70,12 @@ export function HomeScreen({ navigate, openType }: { navigate: NavFn; openType: 
             Cada proyecto parte de una escucha profunda del lugar, del cliente y de su contexto para dar
             forma a paisajes con identidad propia, pensados para madurar y evolucionar con el tiempo.
           </p>
-          <PrimaryButton onClick={() => navigate("metodologia")}>Nuestra metodología →</PrimaryButton>
+          <PrimaryLink href="/metodologia">Nuestra metodología →</PrimaryLink>
         </div>
       </section>
 
       <ImageFrame
-        image={images.studioGarden}
+        image={homeImages.studio}
         className="mx-5 h-[55vw] md:mx-[52px] md:h-[68vh]"
         imgClassName="object-[center_50%]"
         sizes="100vw"
@@ -91,26 +98,25 @@ export function HomeScreen({ navigate, openType }: { navigate: NavFn; openType: 
             </p>
           </div>
           <div className="grid border-t border-[#ddd8cd] md:grid-cols-2 md:gap-x-20">
-            {projectTypes.map((type, index) => (
-              <button
-                type="button"
-                key={type.title}
-                onClick={() => openType(index)}
+            {projectTypes.map((type) => (
+              <Link
+                key={type.slug}
+                href={`/que-disenamos/${type.slug}`}
                 className="flex w-full items-center justify-between gap-4 border-b border-[#ddd8cd] py-[18px] text-left transition-colors hover:text-[#4a6038] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4a6038]/30"
               >
                 <span className="text-[15px] font-normal leading-snug text-[#131419]">{type.title}</span>
                 <span className="shrink-0 text-[13px] text-[#6b7f52]">→</span>
-              </button>
+              </Link>
             ))}
           </div>
           <div className="mt-10">
-            <PrimaryButton onClick={() => navigate("tipos")}>Ver todos los tipos de proyecto →</PrimaryButton>
+            <PrimaryLink href="/que-disenamos">Ver todos los tipos de proyecto →</PrimaryLink>
           </div>
         </div>
       </section>
 
       <PortfolioPreview />
-      <SiteFooter navigate={navigate} />
+      <SiteFooter />
     </div>
   );
 }

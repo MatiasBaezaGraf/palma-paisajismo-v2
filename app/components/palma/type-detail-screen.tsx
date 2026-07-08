@@ -1,24 +1,16 @@
-import { projectTypes, typeProcessSteps } from "../../palma-data";
-import { TextButton } from "./buttons";
+import type { ProjectType } from "../../palma-data";
+import { typeProcessSteps } from "../../palma-data";
+import { TextLink } from "./buttons";
 import { ImageFrame } from "./image-frame";
 import { BottomBar, Cta } from "./layout-parts";
-import type { NavFn } from "./types";
 
-export function TypeDetailScreen({
-  selectedType,
-  navigate,
-}: {
-  selectedType: number;
-  navigate: NavFn;
-}) {
-  const type = projectTypes[selectedType] ?? projectTypes[0];
-
+export function TypeDetailScreen({ type }: { type: ProjectType }) {
   return (
     <div>
       <div className="mx-auto max-w-[1440px] px-5 pt-20 md:px-[52px] md:pt-[120px]">
-        <TextButton onClick={() => navigate("tipos")} className="text-[#a9a79c]">
+        <TextLink href="/que-disenamos" className="text-[#a9a79c]">
           ← Tipos de proyecto
-        </TextButton>
+        </TextLink>
       </div>
       <div className="mx-auto max-w-[1440px] border-b border-[#e0ddd7] px-5 pb-12 pt-6 md:px-[52px]">
         <p className="mb-4 text-[10px] font-normal uppercase tracking-[0.28em] text-[#a9a79c]">
@@ -64,8 +56,8 @@ export function TypeDetailScreen({
           </div>
         ))}
       </section>
-      <Cta title="¿Tenés un proyecto de este tipo?" button="Contactanos" onClick={() => navigate("contacto")} />
-      <BottomBar navigate={navigate} backToTypes />
+      <Cta title="¿Tenés un proyecto de este tipo?" button="Contactanos" href="/contacto" />
+      <BottomBar backToTypes />
     </div>
   );
 }
