@@ -58,12 +58,12 @@ export function AdminDashboard({
   const contactImages = pageImages.filter((item) => item.page === "contacto");
 
   return (
-    <div className="mx-auto grid max-w-[1600px] gap-8 px-5 py-8 md:px-[52px] md:py-12 lg:grid-cols-[260px_1fr]">
-      <aside className="lg:sticky lg:top-24 lg:self-start">
+    <div className="mx-auto grid w-full max-w-[1600px] gap-6 px-4 py-6 sm:px-6 md:px-[52px] md:py-10 lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-8">
+      <aside className="min-w-0 lg:sticky lg:top-24 lg:self-start">
         <div
           role="tablist"
           aria-label="Secciones del sitio"
-          className="flex gap-2 overflow-x-auto border-b border-[#e0ddd7] pb-3 lg:flex-col lg:overflow-visible lg:border-b-0 lg:pb-0"
+          className="-mx-4 flex snap-x gap-2 overflow-x-auto border-b border-[#e0ddd7] px-4 pb-3 sm:-mx-6 sm:px-6 lg:mx-0 lg:flex-col lg:overflow-visible lg:border-b-0 lg:px-0 lg:pb-0"
         >
           {tabs.map((tab) => (
             <button
@@ -72,17 +72,17 @@ export function AdminDashboard({
               type="button"
               onClick={() => setActiveTab(tab.id)}
               aria-selected={activeTab === tab.id}
-              className={`min-w-[168px] border px-4 py-3 text-left transition-colors lg:min-w-0 ${
+              className={`min-w-[138px] max-w-[178px] shrink-0 snap-start border px-3 py-3 text-left transition-colors sm:min-w-[168px] sm:max-w-none sm:px-4 lg:min-w-0 lg:max-w-none lg:shrink ${
                 activeTab === tab.id
                   ? "border-[#4a6038] bg-[#eef0e6] text-[#131419]"
                   : "border-[#e0ddd7] bg-white/50 text-[#777674] hover:border-[#c4bdb0] hover:text-[#131419]"
               }`}
             >
-              <span className="block text-[9px] font-normal uppercase tracking-[0.2em] text-[#a9a79c]">
+              <span className="block text-[9px] font-normal uppercase tracking-[0.16em] text-[#a9a79c] sm:tracking-[0.2em]">
                 {tab.eyebrow}
               </span>
-              <span className="mt-1 flex items-center justify-between gap-4 text-sm font-normal">
-                {tab.title}
+              <span className="mt-1 flex items-center justify-between gap-2 text-left text-[13px] font-normal leading-tight sm:gap-4 sm:text-sm">
+                <span className="min-w-0 break-words">{tab.title}</span>
                 <span className="text-[11px] font-light text-[#9a9486]">{tab.count}</span>
               </span>
             </button>
@@ -90,11 +90,11 @@ export function AdminDashboard({
         </div>
       </aside>
 
-      <section className="min-w-0">
-        <div className="mb-6 grid gap-3 border-b border-[#e0ddd7] pb-5 md:grid-cols-[1fr_auto] md:items-end">
-          <div>
+      <section className="min-w-0 overflow-hidden">
+        <div className="mb-5 grid gap-3 border-b border-[#e0ddd7] pb-5 md:mb-6 md:grid-cols-[1fr_auto] md:items-end">
+          <div className="min-w-0">
             <p className="text-[10px] font-normal uppercase tracking-[0.24em] text-[#a9a79c]">{active.eyebrow}</p>
-            <h2 className="mt-2 text-[clamp(26px,3vw,42px)] font-light italic leading-none text-[#131419]">
+            <h2 className="mt-2 text-[clamp(25px,8vw,42px)] font-light italic leading-none text-[#131419]">
               {active.title}
             </h2>
             <p className="mt-3 max-w-2xl text-sm font-light leading-relaxed text-[#777674]">
@@ -181,7 +181,10 @@ export function AdminDashboard({
 
 function CardGrid({ children, dense = false }: { children: ReactNode; dense?: boolean }) {
   return (
-    <div data-admin-card-grid className={`grid gap-5 ${dense ? "md:grid-cols-2 xl:grid-cols-3" : "md:grid-cols-2"}`}>
+    <div
+      data-admin-card-grid
+      className={`grid min-w-0 gap-4 sm:gap-5 ${dense ? "md:grid-cols-2 xl:grid-cols-3" : "md:grid-cols-2"}`}
+    >
       {children}
     </div>
   );

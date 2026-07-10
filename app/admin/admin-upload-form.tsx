@@ -146,11 +146,11 @@ export function AdminUploadForm({
       ref={formRef}
       onSubmit={handleSubmit}
       data-editing={isEditing ? "true" : "false"}
-      className={`flex h-full min-w-0 flex-col overflow-hidden border bg-white/70 transition-colors ${
+      className={`flex h-full min-w-0 max-w-full flex-col overflow-hidden border bg-white/70 transition-colors ${
         isEditing ? "border-[#4a6038] bg-[#fbfbf6]" : "border-[#e0ddd7]"
       }`}
     >
-      <div className="relative aspect-[4/3] overflow-hidden bg-[#e8e4de]">
+      <div className="relative aspect-[4/3] min-h-0 overflow-hidden bg-[#e8e4de]">
         {previewSrc ? (
           <div
             role="img"
@@ -179,16 +179,20 @@ export function AdminUploadForm({
         ) : null}
       </div>
 
-      <div className="flex flex-1 flex-col gap-4 p-4">
+      <div className="flex min-w-0 flex-1 flex-col gap-4 p-3.5 sm:p-4">
         <div className="min-w-0">
-          <p className="truncate text-[10px] font-normal uppercase tracking-[0.2em] text-[#a9a79c]">{subtitle}</p>
-          <h2 className="mt-1 text-[20px] font-light italic leading-tight text-[#131419] text-pretty">{title}</h2>
+          <p className="truncate text-[10px] font-normal uppercase tracking-[0.16em] text-[#a9a79c] sm:tracking-[0.2em]">
+            {subtitle}
+          </p>
+          <h2 className="mt-1 text-[18px] font-light italic leading-tight text-[#131419] text-pretty sm:text-[20px]">
+            {title}
+          </h2>
         </div>
 
         <input type="hidden" name={hiddenName} value={hiddenValue} />
 
         {isEditing ? (
-          <div className="grid gap-4 border-y border-[#ece9e4] py-4">
+          <div className="grid min-w-0 gap-4 border-y border-[#ece9e4] py-4">
             <label className="grid gap-2 text-[10px] font-normal uppercase tracking-[0.18em] text-[#a9a79c]">
               Imagen
               <input
@@ -197,7 +201,7 @@ export function AdminUploadForm({
                 type="file"
                 accept="image/jpeg,image/png,image/webp"
                 onChange={handleFileChange}
-                className="block w-full text-xs font-light normal-case tracking-normal text-[#493f2c] file:mr-3 file:border-0 file:bg-[#4a6038] file:px-3 file:py-2 file:text-[10px] file:font-normal file:uppercase file:tracking-[0.12em] file:text-white"
+                className="block w-full max-w-full min-w-0 overflow-hidden text-[11px] font-light normal-case tracking-normal text-[#493f2c] file:mr-2 file:border-0 file:bg-[#4a6038] file:px-2.5 file:py-2 file:text-[10px] file:font-normal file:uppercase file:tracking-[0.1em] file:text-white sm:text-xs sm:file:mr-3 sm:file:px-3 sm:file:tracking-[0.12em]"
               />
             </label>
 
@@ -210,7 +214,7 @@ export function AdminUploadForm({
                   required
                   value={altValue}
                   onChange={(event) => setAltValue(event.target.value)}
-                  className="border border-[#e0ddd7] bg-[#f9f7f4] px-3 py-3 text-sm font-light normal-case tracking-normal text-[#131419] outline-none focus:border-[#4a6038]"
+                  className="min-w-0 border border-[#e0ddd7] bg-[#f9f7f4] px-3 py-3 text-sm font-light normal-case tracking-normal text-[#131419] outline-none focus:border-[#4a6038]"
                 />
               </label>
             ) : (
@@ -241,12 +245,12 @@ export function AdminUploadForm({
           </div>
 
           {isEditing ? (
-            <div className="grid gap-2 sm:grid-cols-2">
+          <div className="grid min-w-0 gap-2 sm:grid-cols-2">
               <button
                 type="button"
                 disabled={isPending}
                 onClick={handleCancel}
-                className="inline-flex min-h-11 items-center justify-center border border-[#d8d3c8] px-4 py-3 text-[11px] font-normal uppercase tracking-[0.16em] text-[#493f2c] transition-colors hover:border-[#131419] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#131419]/20 disabled:cursor-wait disabled:opacity-60"
+                className="inline-flex min-h-11 min-w-0 items-center justify-center border border-[#d8d3c8] px-3 py-3 text-center text-[11px] font-normal uppercase tracking-[0.12em] text-[#493f2c] transition-colors hover:border-[#131419] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#131419]/20 disabled:cursor-wait disabled:opacity-60 sm:px-4 sm:tracking-[0.16em]"
               >
                 Cancelar
               </button>
@@ -254,7 +258,7 @@ export function AdminUploadForm({
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="inline-flex min-h-11 items-center justify-center bg-[#4a6038] px-4 py-3 text-[11px] font-normal uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#3d5030] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4a6038]/45 disabled:cursor-wait disabled:bg-[#9a9486]"
+                  className="inline-flex min-h-11 min-w-0 items-center justify-center bg-[#4a6038] px-3 py-3 text-center text-[11px] font-normal uppercase tracking-[0.12em] text-white transition-colors hover:bg-[#3d5030] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4a6038]/45 disabled:cursor-wait disabled:bg-[#9a9486] sm:px-4 sm:tracking-[0.16em]"
                 >
                   {isPending ? "Guardando..." : "Guardar"}
                 </button>
@@ -264,7 +268,7 @@ export function AdminUploadForm({
             <button
               type="button"
               onClick={handleEdit}
-              className="inline-flex min-h-11 items-center justify-center border border-[#131419] px-4 py-3 text-[11px] font-normal uppercase tracking-[0.16em] text-[#131419] transition-colors hover:bg-[#131419] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#131419]/20"
+              className="inline-flex min-h-11 min-w-0 items-center justify-center border border-[#131419] px-3 py-3 text-center text-[11px] font-normal uppercase tracking-[0.12em] text-[#131419] transition-colors hover:bg-[#131419] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#131419]/20 sm:px-4 sm:tracking-[0.16em]"
             >
               Editar
             </button>

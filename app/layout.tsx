@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   title: "Palma — Diseño de Paisajes con Sentido",
   description:
     "Palma es un estudio de paisajismo fundado en 2011 por Isabella de Sousa y Heidi Ignatov. Diseñamos jardines en todas las escalas: balcones, jardines urbanos y de campo, desarrollos residenciales, corporativos e industriales.",
+  icons: {
+    icon: "/palma/palma-01.png",
+  },
 };
 
 export default function RootLayout({
