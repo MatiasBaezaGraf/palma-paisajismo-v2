@@ -121,7 +121,8 @@ export function ContactScreen({ foundersImage }: { foundersImage: ImageAsset }) 
 
 function FounderName({ image }: { image: ImageAsset }) {
   return (
-    <div className="flex min-w-0 items-center gap-3.5">
+    <div data-founder-name className="flex min-w-0 flex-col items-start gap-2">
+      <span className="text-[10px] font-normal uppercase tracking-[0.1em] text-[#a9a79c]">Paisajista</span>
       <Image
         src={image.src}
         alt={image.alt}
@@ -129,9 +130,6 @@ function FounderName({ image }: { image: ImageAsset }) {
         height={image.height}
         className="h-8 w-auto max-w-[72%] object-contain sm:h-9 md:h-10"
       />
-      <span className="shrink-0 text-[10px] font-normal uppercase tracking-[0.1em] text-[#a9a79c]">
-        Paisajista
-      </span>
     </div>
   );
 }

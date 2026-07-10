@@ -258,6 +258,26 @@ test.describe("Palma public website", () => {
     }
   });
 
+  test("contact founder labels sit above the name images", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    await page.goto("/contacto");
+
+    const blocks = page.locator("[data-founder-name]");
+    await expect(blocks).toHaveCount(2);
+
+    const positions = await blocks.evaluateAll((elements) =>
+      elements.map((element) => {
+        const label = element.querySelector("span")!.getBoundingClientRect();
+        const image = element.querySelector("img")!.getBoundingClientRect();
+        return { labelTop: label.top, imageTop: image.top };
+      }),
+    );
+
+    for (const position of positions) {
+      expect(position.labelTop).toBeLessThan(position.imageTop);
+    }
+  });
+
   test("contact desktop form starts below the title area", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 1000 });
     await page.goto("/contacto");
@@ -275,6 +295,12 @@ test.describe("Palma public website", () => {
   test("root opts into Next scroll behavior override for route changes", async ({ page }) => {
     await page.goto("/");
     await expect(page.locator("html")).toHaveAttribute("data-scroll-behavior", "smooth");
+
+    const iconHrefs = await page.locator('link[rel*="icon"]').evaluateAll((links) =>
+      links.map((link) => link.getAttribute("href")),
+    );
+    expect(iconHrefs).toContain("/palma/palma-19.png");
+    expect(iconHrefs).not.toContain("/favicon.ico");
 
     await page.evaluate(() => window.scrollTo({ top: 900, behavior: "instant" }));
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(800);
