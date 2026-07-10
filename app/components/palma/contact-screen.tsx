@@ -59,9 +59,9 @@ export function ContactScreen({ foundersImage }: { foundersImage: ImageAsset }) 
           </Reveal>
         </div>
 
-        <Reveal delay={120}>
+        <Reveal delay={120} className="md:pt-[230px] lg:pt-[256px]">
           {submitted ? (
-            <div className="flex flex-col gap-5 pt-12">
+            <div className="flex flex-col gap-5 pt-12 md:ml-auto md:max-w-[620px] md:border-t md:border-[#e0ddd7] md:pt-8">
               <div className="h-0.5 w-10 bg-[#4a6038]" />
               <h3 className="text-[34px] font-light italic leading-tight text-[#131419]">
                 Gracias por escribirnos.
@@ -71,7 +71,11 @@ export function ContactScreen({ foundersImage }: { foundersImage: ImageAsset }) 
               </p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="flex flex-col gap-7 pt-8">
+            <form
+              onSubmit={handleSubmit}
+              data-contact-form
+              className="flex flex-col gap-7 pt-8 md:ml-auto md:w-full md:max-w-[620px] md:border-t md:border-[#e0ddd7] md:pt-8"
+            >
               <Field label="Nombre" htmlFor="fname">
                 <input id="fname" type="text" required placeholder="Tu nombre completo" className="field-control" />
               </Field>

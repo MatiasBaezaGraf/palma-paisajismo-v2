@@ -234,6 +234,17 @@ test.describe("Palma public website", () => {
     }
   });
 
+  test("que disenamos top header fades in without a hero photo", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    await page.goto("/que-disenamos");
+
+    const headerCopy = page.locator("[data-page-header-copy]");
+    await expect(headerCopy).toBeVisible();
+    const animationName = await headerCopy.evaluate((element) => getComputedStyle(element).animationName);
+    expect(animationName).toBe("fadeUp");
+    await expect(page.locator("header img")).toHaveCount(0);
+  });
+
   test("contact founder name images are readable on mobile", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/contacto");
@@ -245,6 +256,20 @@ test.describe("Palma public website", () => {
     for (const height of heights) {
       expect(height).toBeGreaterThanOrEqual(31);
     }
+  });
+
+  test("contact desktop form starts below the title area", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    await page.goto("/contacto");
+
+    const [titleBox, formBox] = await Promise.all([
+      page.locator("h1").first().boundingBox(),
+      page.locator("[data-contact-form]").boundingBox(),
+    ]);
+
+    expect(titleBox).not.toBeNull();
+    expect(formBox).not.toBeNull();
+    expect(formBox!.y).toBeGreaterThan(titleBox!.y + titleBox!.height - 1);
   });
 
   test("root opts into Next scroll behavior override for route changes", async ({ page }) => {

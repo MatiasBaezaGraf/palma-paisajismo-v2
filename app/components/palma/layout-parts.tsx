@@ -23,15 +23,17 @@ export function PageHeader({
           {backLabel}
         </ReturnLink>
       ) : null}
-      <p className="mb-[18px] text-[10px] font-normal uppercase tracking-[0.28em] text-[#a9a79c]">
-        {eyebrow}
-      </p>
-      <h1 className="mb-5 text-[clamp(40px,6.5vw,84px)] font-light italic leading-none text-[#131419]">
-        {title}
-      </h1>
-      <p className="max-w-xl text-[15px] font-light leading-[1.85] text-[#777674] text-pretty">
-        {description}
-      </p>
+      <div data-page-header-copy className="animate-[fadeUp_0.95s_0.15s_ease-out_both] motion-reduce:animate-none">
+        <p className="mb-[18px] text-[10px] font-normal uppercase tracking-[0.28em] text-[#a9a79c]">
+          {eyebrow}
+        </p>
+        <h1 className="mb-5 text-[clamp(40px,6.5vw,84px)] font-light italic leading-none text-[#131419]">
+          {title}
+        </h1>
+        <p className="max-w-xl text-[15px] font-light leading-[1.85] text-[#777674] text-pretty">
+          {description}
+        </p>
+      </div>
     </header>
   );
 }
