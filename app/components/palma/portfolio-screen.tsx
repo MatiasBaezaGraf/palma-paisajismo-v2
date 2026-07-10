@@ -8,14 +8,19 @@ export function PortfolioScreen() {
   return (
     <div>
       <section className="relative flex min-h-[80vh] items-center overflow-hidden md:min-h-[88vh]">
-        <ImageFrame image={images.verticalGarden} className="absolute inset-0" sizes="100vw" priority />
+        <ImageFrame
+          image={images.verticalGarden}
+          className="absolute inset-0 animate-[scaleReveal_1.6s_ease-out_both]"
+          sizes="100vw"
+          priority
+        />
         <div className="absolute inset-0 bg-[#131419]/60" />
         <div className="absolute left-5 top-24 z-10 md:left-[52px] md:top-[120px]">
           <ReturnLink href="/" tone="light">
             Inicio
           </ReturnLink>
         </div>
-        <Reveal className="relative mx-auto w-full max-w-[1440px] px-5 pt-24 md:px-[52px] md:pt-0">
+        <div className="relative mx-auto w-full max-w-[1440px] animate-[fadeUp_0.9s_0.5s_ease-out_both] px-5 pt-24 md:px-[52px] md:pt-0">
           <p className="mb-5 text-[10px] font-normal uppercase tracking-[0.34em] text-white/50">
             Proyectos · Próximamente
           </p>
@@ -35,7 +40,7 @@ export function PortfolioScreen() {
               Contacto
             </PrimaryLink>
           </div>
-        </Reveal>
+        </div>
       </section>
       <Reveal>
         <BottomBar names />

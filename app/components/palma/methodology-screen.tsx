@@ -9,7 +9,7 @@ export function MethodologyScreen({ heroImage }: { heroImage: ImageAsset }) {
       <section className="relative h-[60vh] overflow-hidden md:h-[82vh]">
         <ImageFrame
           image={heroImage}
-          className="absolute inset-0"
+          className="absolute inset-0 animate-[scaleReveal_1.6s_ease-out_both]"
           imgClassName="object-[center_20%]"
           priority
           sizes="100vw"
@@ -20,14 +20,14 @@ export function MethodologyScreen({ heroImage }: { heroImage: ImageAsset }) {
             Inicio
           </ReturnLink>
         </div>
-        <Reveal className="absolute inset-x-5 bottom-12 md:inset-x-[52px] md:bottom-[72px]">
+        <div className="absolute inset-x-5 bottom-12 animate-[fadeUp_0.9s_0.5s_ease-out_both] md:inset-x-[52px] md:bottom-[72px]">
           <p className="mb-4 text-[10px] font-normal uppercase tracking-[0.34em] text-white/50">
             Metodología de trabajo
           </p>
           <h1 className="max-w-[820px] text-[clamp(36px,6.5vw,88px)] font-light italic leading-none text-white text-pretty">
             De la escucha al paisaje construido.
           </h1>
-        </Reveal>
+        </div>
       </section>
       <Reveal>
         <section className="mx-auto grid max-w-[1440px] gap-7 border-b border-[#e0ddd7] px-5 py-14 md:grid-cols-[5fr_7fr] md:gap-20 md:px-[52px] md:py-[100px]">

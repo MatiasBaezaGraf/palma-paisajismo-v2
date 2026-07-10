@@ -39,7 +39,7 @@ export function Reveal({
       className={`overflow-hidden ${className}`}
     >
       <div
-        className={`transition-all duration-[850ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:transition-none ${
+        className={`transition-all duration-[1250ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:transition-none md:duration-[1050ms] ${
           isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
         }`}
         style={{ transitionDelay: isVisible ? `${delay}ms` : "0ms" }}

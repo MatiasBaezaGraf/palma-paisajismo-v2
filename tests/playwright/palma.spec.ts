@@ -202,6 +202,62 @@ test.describe("Palma public website", () => {
     expect(transitionDuration).not.toBe("0s");
   });
 
+  test("scroll reveals use slower mobile timing", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/");
+
+    const reveals = page.locator("[data-reveal]");
+    const target = reveals.first();
+    await target.scrollIntoViewIfNeeded();
+    await expect(target).toHaveAttribute("data-visible", "true", { timeout: 3000 });
+
+    const duration = await target.evaluate((element) => {
+      const animatedElement = element.firstElementChild ?? element;
+      return Number.parseFloat(getComputedStyle(animatedElement).transitionDuration);
+    });
+    expect(duration).toBeGreaterThanOrEqual(1.2);
+  });
+
+  test("methodology and project heroes use image-scale and title fade animations", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 1000 });
+
+    for (const route of ["/metodologia", "/proyectos"]) {
+      await page.goto(route);
+      const animations = await page.locator("section").first().evaluate((section) =>
+        Array.from(section.querySelectorAll("div"))
+          .map((element) => getComputedStyle(element).animationName)
+          .filter((name) => name !== "none"),
+      );
+
+      expect(animations).toContain("scaleReveal");
+      expect(animations).toContain("fadeUp");
+    }
+  });
+
+  test("contact founder name images are readable on mobile", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/contacto");
+
+    const nameImages = page.locator('img[alt="Isabella de Sousa"], img[alt="Heidi Ignatov"]');
+    await expect(nameImages).toHaveCount(2);
+
+    const heights = await nameImages.evaluateAll((images) => images.map((image) => image.getBoundingClientRect().height));
+    for (const height of heights) {
+      expect(height).toBeGreaterThanOrEqual(31);
+    }
+  });
+
+  test("root opts into Next scroll behavior override for route changes", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.locator("html")).toHaveAttribute("data-scroll-behavior", "smooth");
+
+    await page.evaluate(() => window.scrollTo({ top: 900, behavior: "instant" }));
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(800);
+    await page.getByRole("link", { name: "Proyectos" }).first().click();
+    await expect(page).toHaveURL(/\/proyectos$/);
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThan(140);
+  });
+
   test("admin route redirects to login and rejects invalid credentials", async ({ page }) => {
     await page.goto("/admin");
     await expect(page).toHaveURL(/\/admin\/login/);

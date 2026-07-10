@@ -23,7 +23,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es-AR" className={`${palmaFont.variable} h-full scroll-smooth antialiased`}>
+    <html
+      lang="es-AR"
+      data-scroll-behavior="smooth"
+      className={`${palmaFont.variable} h-full scroll-smooth antialiased`}
+    >
       <body className="min-h-full bg-[#f9f7f4] text-[#131419]">{children}</body>
     </html>
   );
