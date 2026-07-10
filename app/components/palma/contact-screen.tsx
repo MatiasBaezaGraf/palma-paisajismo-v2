@@ -31,7 +31,7 @@ export function ContactScreen({ foundersImage }: { foundersImage: ImageAsset }) 
             <h1 className="mb-10 text-[clamp(32px,4.5vw,60px)] font-light italic leading-[1.12] text-[#131419] text-pretty">
               Hablemos sobre
               <br />
-              tu proyecto.
+              tu proyecto
             </h1>
             <div className="mb-9 flex flex-col gap-3 border-b border-[#e0ddd7] pb-9">
               <FounderName image={images.isabellaName} />
@@ -64,7 +64,7 @@ export function ContactScreen({ foundersImage }: { foundersImage: ImageAsset }) 
             <div className="flex flex-col gap-5 pt-12 md:ml-auto md:max-w-[620px] md:border-t md:border-[#e0ddd7] md:pt-8">
               <div className="h-0.5 w-10 bg-[#4a6038]" />
               <h3 className="text-[34px] font-light italic leading-tight text-[#131419]">
-                Gracias por escribirnos.
+                Gracias por escribirnos
               </h3>
               <p className="text-[15px] font-light leading-[1.85] text-[#493f2c]">
                 Te responderemos a la brevedad para charlar sobre tu proyecto.

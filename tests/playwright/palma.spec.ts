@@ -148,7 +148,7 @@ test.describe("Palma public website", () => {
 
     await page.getByRole("link", { name: "Proyectos" }).click();
     await expect(page).toHaveURL(/\/proyectos$/);
-    await expect(page.getByRole("heading", { name: "Estamos preparando esta sección." })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Estamos preparando esta sección" })).toBeVisible();
   });
 
   test("contact form shows thank-you state", async ({ page }) => {
@@ -159,7 +159,7 @@ test.describe("Palma public website", () => {
     await page.getByLabel("Tipo de proyecto").selectOption("patio");
     await page.getByLabel("Contanos sobre tu espacio").fill("Quiero revisar el jardín.");
     await page.getByRole("button", { name: "Enviar consulta" }).click();
-    await expect(page.getByRole("heading", { name: "Gracias por escribirnos." })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Gracias por escribirnos" })).toBeVisible();
   });
 
   test("section pages place the return link before page content", async ({ page }) => {
@@ -243,6 +243,21 @@ test.describe("Palma public website", () => {
     const animationName = await headerCopy.evaluate((element) => getComputedStyle(element).animationName);
     expect(animationName).toBe("fadeUp");
     await expect(page.locator("header img")).toHaveCount(0);
+  });
+
+  test("prominent public headings do not end with periods", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 1000 });
+
+    for (const route of routes) {
+      await page.goto(route);
+      const headings = await page.locator("h1, h2, h3").evaluateAll((elements) =>
+        elements.map((element) => element.textContent?.trim()).filter(Boolean),
+      );
+
+      for (const heading of headings) {
+        expect(heading!.endsWith(".")).toBe(false);
+      }
+    }
   });
 
   test("contact founder name images are readable on mobile", async ({ page }) => {

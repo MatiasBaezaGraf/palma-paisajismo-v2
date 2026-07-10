@@ -25,14 +25,14 @@ export function MethodologyScreen({ heroImage }: { heroImage: ImageAsset }) {
             Metodología de trabajo
           </p>
           <h1 className="max-w-[820px] text-[clamp(36px,6.5vw,88px)] font-light italic leading-none text-white text-pretty">
-            De la escucha al paisaje construido.
+            De la escucha al paisaje construido
           </h1>
         </div>
       </section>
       <Reveal>
         <section className="mx-auto grid max-w-[1440px] gap-7 border-b border-[#e0ddd7] px-5 py-14 md:grid-cols-[5fr_7fr] md:gap-20 md:px-[52px] md:py-[100px]">
           <h2 className="text-[clamp(22px,2.8vw,36px)] font-light italic leading-tight text-[#131419] text-pretty">
-            Cada proyecto es un proceso de descubrimiento mutuo.
+            Cada proyecto es un proceso de descubrimiento mutuo
           </h2>
           <p className="self-center text-[15px] font-light leading-[1.92] text-[#493f2c] text-pretty">
             Escuchamos el lugar, comprendemos las necesidades de quienes lo habitarán o los requerimientos de

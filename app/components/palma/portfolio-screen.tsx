@@ -25,7 +25,7 @@ export function PortfolioScreen() {
             Proyectos · Próximamente
           </p>
           <h1 className="max-w-3xl text-[clamp(36px,5.5vw,76px)] font-light italic leading-none text-white text-pretty">
-            Estamos preparando esta sección.
+            Estamos preparando esta sección
           </h1>
           <p className="mt-7 max-w-xl text-[15px] font-light leading-[1.85] text-white/70">
             Pronto vas a poder recorrer una selección de los proyectos realizados por el estudio. Mientras

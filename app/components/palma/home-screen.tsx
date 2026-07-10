@@ -32,7 +32,7 @@ export function HomeScreen({
           <h1 className="max-w-[800px] text-[clamp(44px,8vw,110px)] font-light italic leading-[0.93] text-white text-pretty">
             Paisajes
             <br />
-            que perduran.
+            que perduran
           </h1>
           <div className="mt-8 flex max-w-xl items-start gap-5">
             <div className="mt-[11px] h-px w-7 shrink-0 bg-white/30" />
@@ -57,7 +57,7 @@ export function HomeScreen({
               El estudio · Desde 2011
             </p>
             <h2 className="text-[clamp(27px,3.5vw,46px)] font-normal leading-tight tracking-normal text-[#131419] text-pretty">
-              Diseñamos entornos que conectan a las personas con la naturaleza.
+              Diseñamos entornos que conectan a las personas con la naturaleza
             </h2>
           </div>
           <div className="pt-2">
@@ -95,7 +95,7 @@ export function HomeScreen({
                   Tipos de proyecto
                 </p>
                 <h2 className="text-[clamp(24px,3vw,40px)] font-light italic leading-tight text-[#131419] text-pretty">
-                  Trabajamos en distintos contextos y escalas.
+                  Trabajamos en distintos contextos y escalas
                 </h2>
               </div>
               <p className="self-center text-[15px] font-light leading-[1.9] text-[#493f2c] text-pretty">
