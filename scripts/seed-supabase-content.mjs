@@ -133,6 +133,17 @@ const projectTypes = [
   },
 ];
 
+const pageImages = [
+  {
+    file: "palma-06.jpg",
+    path: "pages/metodologia/hero/current.jpg",
+  },
+  {
+    file: "palma-05.jpg",
+    path: "pages/contacto/founders/current.jpg",
+  },
+];
+
 function contentTypeFor(fileName) {
   if (fileName.endsWith(".png")) return "image/png";
   if (fileName.endsWith(".webp")) return "image/webp";
@@ -179,7 +190,7 @@ async function main() {
     if (error) throw error;
   }
 
-  for (const item of [...homeImages, ...projectTypes]) {
+  for (const item of [...homeImages, ...projectTypes, ...pageImages]) {
     await uploadImage(supabase, item);
   }
 

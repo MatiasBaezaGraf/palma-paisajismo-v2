@@ -73,15 +73,23 @@ export function Nav() {
           type="button"
           onClick={() => setMenuOpen((open) => !open)}
           aria-expanded={menuOpen}
-          aria-label="Abrir menú"
-          className="inline-flex h-10 w-10 items-center justify-center text-2xl leading-none text-[#131419] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4a6038]/35 md:hidden"
+          aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
+          className="inline-flex h-10 w-10 items-center justify-center text-2xl leading-none text-[#131419] transition-transform duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4a6038]/35 md:hidden"
         >
           {menuOpen ? "×" : "☰"}
         </button>
       </div>
 
-      {menuOpen ? (
-        <div className="flex flex-col gap-5 border-t border-[#e0ddd7] bg-[#f9f7f4]/98 px-5 py-6 md:hidden">
+      <div
+        data-mobile-menu
+        aria-hidden={!menuOpen}
+        className={`overflow-hidden border-t transition-[max-height,opacity,transform,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] md:hidden ${
+          menuOpen
+            ? "max-h-96 translate-y-0 border-[#e0ddd7] opacity-100"
+            : "pointer-events-none max-h-0 -translate-y-2 border-transparent opacity-0"
+        }`}
+      >
+        <div className="flex flex-col gap-5 bg-[#f9f7f4]/98 px-5 py-6">
           <div className="flex items-center gap-3">
             <TextLink href="/que-disenamos" onClick={() => setMenuOpen(false)} className="text-[13px]">
               {links[0].labels[labelIndex]}
@@ -90,7 +98,7 @@ export function Nav() {
               type="button"
               onClick={() => setLabelIndex((current) => (current + 1) % 2)}
               title="Cambiar texto del menú"
-              className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-[#d8d3c8] text-[10px] text-[#6b7f52]"
+              className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-[#d8d3c8] text-[10px] text-[#6b7f52] transition-colors hover:border-[#4a6038]"
             >
               ↻
             </button>
@@ -104,7 +112,7 @@ export function Nav() {
             Contacto
           </TextLink>
         </div>
-      ) : null}
+      </div>
     </nav>
   );
 }

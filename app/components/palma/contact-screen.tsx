@@ -5,10 +5,11 @@ import { FormEvent, type ReactNode, useState } from "react";
 import { contactOptions, images, type ImageAsset } from "../../palma-data";
 import { PrimaryButton } from "./buttons";
 import { ImageFrame } from "./image-frame";
-import { ContactFact, Field } from "./layout-parts";
+import { ContactFact, Field, ReturnLink } from "./layout-parts";
 import { LogoFull } from "./logo";
+import { Reveal } from "./reveal";
 
-export function ContactScreen() {
+export function ContactScreen({ foundersImage }: { foundersImage: ImageAsset }) {
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -20,34 +21,45 @@ export function ContactScreen() {
     <div>
       <section className="mx-auto grid min-h-[85vh] max-w-[1440px] gap-9 px-5 pb-14 pt-24 md:grid-cols-[5fr_7fr] md:gap-20 md:px-[52px] md:pb-[60px] md:pt-40">
         <div>
-          <p className="mb-6 text-[10px] font-normal uppercase tracking-[0.28em] text-[#a9a79c]">Contacto</p>
-          <h1 className="mb-10 text-[clamp(32px,4.5vw,60px)] font-light italic leading-[1.12] text-[#131419] text-pretty">
-            Hablemos sobre
-            <br />
-            tu proyecto.
-          </h1>
-          <div className="mb-9 flex flex-col gap-3 border-b border-[#e0ddd7] pb-9">
-            <FounderName image={images.isabellaName} />
-            <FounderName image={images.heidiName} />
-          </div>
-          <div className="mb-10 flex flex-col gap-7">
-            <ContactFact label="Email">hola@palmapaisajismo.com.ar</ContactFact>
-            <ContactFact label="Instagram">@palma.paisajismo</ContactFact>
-            <ContactFact label="Área de trabajo">
-              Buenos Aires, Argentina
+          <ReturnLink href="/" className="mb-10">
+            Inicio
+          </ReturnLink>
+          <Reveal>
+            <p className="mb-6 text-[10px] font-normal uppercase tracking-[0.28em] text-[#a9a79c]">
+              Contacto
+            </p>
+            <h1 className="mb-10 text-[clamp(32px,4.5vw,60px)] font-light italic leading-[1.12] text-[#131419] text-pretty">
+              Hablemos sobre
               <br />
-              Proyectos en todo el país
-            </ContactFact>
-          </div>
-          <ImageFrame
-            image={images.founders}
-            className="h-[200px] md:h-[220px]"
-            imgClassName="object-[center_20%]"
-            priority
-          />
+              tu proyecto.
+            </h1>
+            <div className="mb-9 flex flex-col gap-3 border-b border-[#e0ddd7] pb-9">
+              <FounderName image={images.isabellaName} />
+              <FounderName image={images.heidiName} />
+            </div>
+          </Reveal>
+          <Reveal delay={80}>
+            <div className="mb-10 flex flex-col gap-7">
+              <ContactFact label="Email">hola@palmapaisajismo.com.ar</ContactFact>
+              <ContactFact label="Instagram">@palma.paisajismo</ContactFact>
+              <ContactFact label="Área de trabajo">
+                Buenos Aires, Argentina
+                <br />
+                Proyectos en todo el país
+              </ContactFact>
+            </div>
+          </Reveal>
+          <Reveal delay={120}>
+            <ImageFrame
+              image={foundersImage}
+              className="h-[200px] md:h-[220px]"
+              imgClassName="object-[center_20%]"
+              priority
+            />
+          </Reveal>
         </div>
 
-        <div>
+        <Reveal delay={120}>
           {submitted ? (
             <div className="flex flex-col gap-5 pt-12">
               <div className="h-0.5 w-10 bg-[#4a6038]" />
@@ -88,15 +100,17 @@ export function ContactScreen() {
               </PrimaryButton>
             </form>
           )}
-        </div>
+        </Reveal>
       </section>
-      <div className="border-t border-[#e0ddd7]">
-        <div className="mx-auto flex max-w-[1440px] flex-col gap-5 px-5 py-8 md:flex-row md:items-center md:justify-between md:px-[52px]">
-          <LogoFull className="h-12" />
-          <FooterText>© 2025 Palma — Diseño de Paisajes con Sentido</FooterText>
-          <FooterText>Buenos Aires, Argentina</FooterText>
+      <Reveal>
+        <div className="border-t border-[#e0ddd7]">
+          <div className="mx-auto flex max-w-[1440px] flex-col gap-5 px-5 py-8 md:flex-row md:items-center md:justify-between md:px-[52px]">
+            <LogoFull className="h-12" />
+            <FooterText>© 2025 Palma — Diseño de Paisajes con Sentido</FooterText>
+            <FooterText>Buenos Aires, Argentina</FooterText>
+          </div>
         </div>
-      </div>
+      </Reveal>
     </div>
   );
 }

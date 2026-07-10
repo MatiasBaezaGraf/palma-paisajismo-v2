@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getAdminSession, requireAdminSession } from "../lib/admin-auth";
 import { PALMA_IMAGE_BUCKET } from "../lib/images";
+import { getPageImageConfig } from "../lib/page-images";
 import { createClient } from "../lib/supabase/server";
 
 const maxUploadSize = 10 * 1024 * 1024;
@@ -57,6 +58,35 @@ async function uploadImage(
   }
 
   return path;
+}
+
+async function uploadFixedImage(
+  file: FormDataEntryValue | null,
+  path: string,
+  supabase: Awaited<ReturnType<typeof createClient>>,
+) {
+  if (!(file instanceof File) || file.size === 0) {
+    throw new Error("Seleccioná una imagen para guardar.");
+  }
+
+  if (file.size > maxUploadSize) {
+    throw new Error("La imagen no puede superar 10 MB.");
+  }
+
+  const extension = mimeExtensions[file.type];
+
+  if (!extension) {
+    throw new Error("Formato no permitido. Usá JPG, PNG o WebP.");
+  }
+
+  const { error } = await supabase.storage.from(PALMA_IMAGE_BUCKET).upload(path, file, {
+    contentType: file.type,
+    upsert: true,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
 }
 
 export async function signIn(formData: FormData) {
@@ -170,5 +200,27 @@ export async function updateProjectTypeImage(formData: FormData) {
 
   revalidatePath("/que-disenamos");
   revalidatePath(`/que-disenamos/${slug}`);
+  revalidatePath("/admin");
+}
+
+export async function updatePageImage(formData: FormData) {
+  const admin = await requireAdminSession();
+  const imageId = getString(formData, "imageId");
+  const config = getPageImageConfig(imageId);
+
+  if (!config) {
+    throw new Error("Imagen inválida.");
+  }
+
+  await uploadFixedImage(formData.get("image"), config.image_path, admin.supabase);
+
+  if (config.page === "metodologia") {
+    revalidatePath("/metodologia");
+  }
+
+  if (config.page === "contacto") {
+    revalidatePath("/contacto");
+  }
+
   revalidatePath("/admin");
 }

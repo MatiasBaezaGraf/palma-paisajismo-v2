@@ -1,5 +1,6 @@
 import { images, projectTypes as fallbackProjectTypes, type ImageAsset, type ProjectType } from "../palma-data";
 import { getPublicImageUrl } from "./images";
+import { pageImageConfigs, type PageImageConfig, type PageImageId } from "./page-images";
 import { createClient } from "./supabase/server";
 
 export type HomeImageSlot = "hero" | "studio";
@@ -29,6 +30,19 @@ export type ProjectTypeRow = {
   updated_at: string;
 };
 
+export type PageImageRow = {
+  id: PageImageId;
+  page: PageImageConfig["page"];
+  pageLabel: string;
+  slot: string;
+  label: string;
+  image_path: string;
+  image_alt: string;
+  image_width: number;
+  image_height: number;
+  updated_at: string;
+};
+
 export const fallbackHomeImages: HomeImages = {
   hero: images.heroGarden,
   studio: images.studioGarden,
@@ -45,6 +59,62 @@ function imageFromRow(row: {
     alt: row.image_alt,
     width: row.image_width,
     height: row.image_height,
+  };
+}
+
+function imageFromPageImage(row: PageImageRow): ImageAsset {
+  return {
+    src: row.image_path,
+    alt: row.image_alt,
+    width: row.image_width,
+    height: row.image_height,
+  };
+}
+
+function versionedPublicPath(path: string, updatedAt?: string | null) {
+  const url = getPublicImageUrl(path);
+  return updatedAt ? `${url}?v=${encodeURIComponent(updatedAt)}` : url;
+}
+
+function splitStoragePath(path: string) {
+  const parts = path.split("/");
+  const name = parts.pop() ?? "";
+  return {
+    folder: parts.join("/"),
+    name,
+  };
+}
+
+async function getStorageUpdatedAt(path: string) {
+  const supabase = await createClient();
+  const { folder, name } = splitStoragePath(path);
+  const { data, error } = await supabase.storage.from("palma-images").list(folder, {
+    limit: 20,
+    search: name,
+  });
+
+  if (error) {
+    return null;
+  }
+
+  return data?.find((item) => item.name === name)?.updated_at ?? null;
+}
+
+async function pageImageRowFromConfig(config: PageImageConfig): Promise<PageImageRow> {
+  const updatedAt = await getStorageUpdatedAt(config.image_path);
+  const hasStorageImage = Boolean(updatedAt);
+
+  return {
+    id: config.id,
+    page: config.page,
+    pageLabel: config.pageLabel,
+    slot: config.slot,
+    label: config.label,
+    image_path: hasStorageImage ? versionedPublicPath(config.image_path, updatedAt) : config.fallback.src,
+    image_alt: config.image_alt,
+    image_width: config.image_width,
+    image_height: config.image_height,
+    updated_at: updatedAt ?? new Date(0).toISOString(),
   };
 }
 
@@ -108,6 +178,15 @@ export async function getProjectType(slug: string): Promise<ProjectType | null> 
   return projectTypeFromRow(data);
 }
 
+export async function getPageImage(id: PageImageId): Promise<ImageAsset> {
+  const row = await pageImageRowFromConfig(pageImageConfigs[id]);
+  return imageFromPageImage(row);
+}
+
+export async function getPageImages(): Promise<PageImageRow[]> {
+  return Promise.all(Object.values(pageImageConfigs).map(pageImageRowFromConfig));
+}
+
 export async function getAdminContent() {
   const supabase = await createClient();
   const [{ data: homeImages, error: homeError }, { data: projectTypes, error: projectError }] = await Promise.all([
@@ -129,8 +208,11 @@ export async function getAdminContent() {
     throw new Error(projectError.message);
   }
 
+  const pageImages = await getPageImages();
+
   return {
     homeImages: (homeImages ?? []) as HomeImageRow[],
     projectTypes: (projectTypes ?? []) as ProjectTypeRow[],
+    pageImages,
   };
 }

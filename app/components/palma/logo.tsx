@@ -8,7 +8,7 @@ export function LogoFull({ className = "h-12" }: { className?: string }) {
       alt={images.logoFull.alt}
       width={images.logoFull.width}
       height={images.logoFull.height}
-      className={`w-auto ${className}`}
+      className={`h-12 w-auto max-w-full self-start object-contain ${className}`}
       priority
     />
   );

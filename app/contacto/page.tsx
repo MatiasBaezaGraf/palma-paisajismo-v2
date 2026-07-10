@@ -1,10 +1,13 @@
 import { ContactScreen } from "../components/palma/contact-screen";
 import { SiteShell } from "../components/palma/site-shell";
+import { getPageImage } from "../lib/content";
 
-export default function ContactoPage() {
+export default async function ContactoPage() {
+  const foundersImage = await getPageImage("contact-founders");
+
   return (
     <SiteShell>
-      <ContactScreen />
+      <ContactScreen foundersImage={foundersImage} />
     </SiteShell>
   );
 }

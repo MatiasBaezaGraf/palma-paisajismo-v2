@@ -1,7 +1,8 @@
 import { images } from "../../palma-data";
 import { PrimaryLink } from "./buttons";
 import { ImageFrame } from "./image-frame";
-import { BottomBar } from "./layout-parts";
+import { BottomBar, ReturnLink } from "./layout-parts";
+import { Reveal } from "./reveal";
 
 export function PortfolioScreen() {
   return (
@@ -9,7 +10,12 @@ export function PortfolioScreen() {
       <section className="relative flex min-h-[80vh] items-center overflow-hidden md:min-h-[88vh]">
         <ImageFrame image={images.verticalGarden} className="absolute inset-0" sizes="100vw" priority />
         <div className="absolute inset-0 bg-[#131419]/60" />
-        <div className="relative mx-auto w-full max-w-[1440px] px-5 md:px-[52px]">
+        <div className="absolute left-5 top-24 z-10 md:left-[52px] md:top-[120px]">
+          <ReturnLink href="/" tone="light">
+            Inicio
+          </ReturnLink>
+        </div>
+        <Reveal className="relative mx-auto w-full max-w-[1440px] px-5 pt-24 md:px-[52px] md:pt-0">
           <p className="mb-5 text-[10px] font-normal uppercase tracking-[0.34em] text-white/50">
             Proyectos · Próximamente
           </p>
@@ -29,9 +35,11 @@ export function PortfolioScreen() {
               Contacto
             </PrimaryLink>
           </div>
-        </div>
+        </Reveal>
       </section>
-      <BottomBar names />
+      <Reveal>
+        <BottomBar names />
+      </Reveal>
     </div>
   );
 }

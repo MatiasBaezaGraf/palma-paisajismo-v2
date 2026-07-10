@@ -1,10 +1,13 @@
 import { MethodologyScreen } from "../components/palma/methodology-screen";
 import { SiteShell } from "../components/palma/site-shell";
+import { getPageImage } from "../lib/content";
 
-export default function MetodologiaPage() {
+export default async function MetodologiaPage() {
+  const heroImage = await getPageImage("methodology-hero");
+
   return (
     <SiteShell>
-      <MethodologyScreen />
+      <MethodologyScreen heroImage={heroImage} />
     </SiteShell>
   );
 }

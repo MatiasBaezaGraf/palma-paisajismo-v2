@@ -1,7 +1,7 @@
-import { type HomeImageRow, type ProjectTypeRow } from "../lib/content";
+import { type HomeImageRow, type PageImageRow, type ProjectTypeRow } from "../lib/content";
 import { AdminUploadForm } from "./admin-upload-form";
 
-type ImageCardItem = HomeImageRow | ProjectTypeRow;
+type ImageCardItem = HomeImageRow | PageImageRow | ProjectTypeRow;
 
 export function AdminImageCard({
   item,
@@ -11,7 +11,7 @@ export function AdminImageCard({
 }: {
   item: ImageCardItem;
   action: (formData: FormData) => Promise<void>;
-  hiddenName: "slot" | "slug";
+  hiddenName: "slot" | "slug" | "imageId";
   hiddenValue: string;
 }) {
   return (

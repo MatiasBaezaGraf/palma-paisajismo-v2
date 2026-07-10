@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { OutlineLink, PrimaryLink, TextLink } from "./buttons";
 import { LogoFull } from "./logo";
 
@@ -6,13 +7,22 @@ export function PageHeader({
   eyebrow,
   title,
   description,
+  backHref,
+  backLabel,
 }: {
   eyebrow: string;
   title: string;
   description: string;
+  backHref?: string;
+  backLabel?: string;
 }) {
   return (
     <header className="mx-auto max-w-[1440px] border-b border-[#e0ddd7] px-5 pb-12 pt-24 md:px-[52px] md:pt-40">
+      {backHref && backLabel ? (
+        <ReturnLink href={backHref} className="mb-10">
+          {backLabel}
+        </ReturnLink>
+      ) : null}
       <p className="mb-[18px] text-[10px] font-normal uppercase tracking-[0.28em] text-[#a9a79c]">
         {eyebrow}
       </p>
@@ -23,6 +33,34 @@ export function PageHeader({
         {description}
       </p>
     </header>
+  );
+}
+
+export function ReturnLink({
+  href,
+  children,
+  className = "",
+  tone = "default",
+}: {
+  href: string;
+  children: ReactNode;
+  className?: string;
+  tone?: "default" | "light";
+}) {
+  const toneClass =
+    tone === "light"
+      ? "border-white/35 text-white/70 hover:border-white/70 hover:text-white"
+      : "border-[#d6d0c4] text-[#6b7f52] hover:border-[#6b7f52] hover:text-[#131419]";
+
+  return (
+    <Link
+      href={href}
+      data-return-link
+      className={`inline-flex items-center gap-2 border-b pb-1 text-[11px] font-normal uppercase tracking-[0.18em] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4a6038]/30 ${toneClass} ${className}`}
+    >
+      <span aria-hidden="true">←</span>
+      <span>{children}</span>
+    </Link>
   );
 }
 
