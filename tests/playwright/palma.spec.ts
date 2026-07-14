@@ -7,7 +7,7 @@ const routes = [
   "/que-disenamos",
   "/que-disenamos/balcones-y-terrazas-verdes",
   "/proyectos",
-  "/metodologia",
+  "/nuestra-mirada",
   "/contacto",
 ];
 
@@ -125,7 +125,7 @@ test.describe("Palma public website", () => {
   test("desktop navigation and project type links work", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 1000 });
     await page.goto("/");
-    await page.getByRole("link", { name: /Qué diseñamos|Áreas de trabajo/ }).click();
+    await page.getByRole("link", { name: "Qué diseñamos" }).first().click();
     await expect(page).toHaveURL(/\/que-disenamos$/);
     await page.getByRole("link", { name: /Balcones y terrazas verdes/ }).first().click();
     await expect(page).toHaveURL(/\/que-disenamos\/balcones-y-terrazas-verdes$/);
@@ -169,7 +169,7 @@ test.describe("Palma public website", () => {
       { route: "/que-disenamos", label: "Inicio", href: "/" },
       { route: "/que-disenamos/balcones-y-terrazas-verdes", label: "Qué diseñamos", href: "/que-disenamos" },
       { route: "/proyectos", label: "Inicio", href: "/" },
-      { route: "/metodologia", label: "Inicio", href: "/" },
+      { route: "/nuestra-mirada", label: "Inicio", href: "/" },
       { route: "/contacto", label: "Inicio", href: "/" },
     ];
 
@@ -218,10 +218,10 @@ test.describe("Palma public website", () => {
     expect(duration).toBeGreaterThanOrEqual(1.2);
   });
 
-  test("methodology and project heroes use image-scale and title fade animations", async ({ page }) => {
+  test("nuestra mirada and project heroes use image-scale and title fade animations", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 1000 });
 
-    for (const route of ["/metodologia", "/proyectos"]) {
+    for (const route of ["/nuestra-mirada", "/proyectos"]) {
       await page.goto(route);
       const animations = await page.locator("section").first().evaluate((section) =>
         Array.from(section.querySelectorAll("div"))
@@ -340,7 +340,7 @@ test.describe("Palma public website", () => {
 
     await expect(page.getByRole("tab", { name: /Home/ })).toBeVisible();
     await expect(page.getByRole("tab", { name: /diseñamos/ })).toBeVisible();
-    await expect(page.getByRole("tab", { name: /Metodología/ })).toBeVisible();
+    await expect(page.getByRole("tab", { name: /Nuestra mirada/ })).toBeVisible();
     await expect(page.getByRole("tab", { name: /Contacto/ })).toBeVisible();
 
     await page.getByRole("tab", { name: /diseñamos/ }).click();

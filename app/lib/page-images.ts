@@ -1,10 +1,10 @@
 import { images, type ImageAsset } from "../palma-data";
 
-export type PageImageId = "methodology-hero" | "contact-founders";
+export type PageImageId = "nuestra-mirada-hero" | "nuestra-mirada-heidi" | "contact-founders";
 
 export type PageImageConfig = {
   id: PageImageId;
-  page: "metodologia" | "contacto";
+  page: "nuestra-mirada" | "contacto";
   pageLabel: string;
   slot: string;
   label: string;
@@ -16,17 +16,29 @@ export type PageImageConfig = {
 };
 
 export const pageImageConfigs = {
-  "methodology-hero": {
-    id: "methodology-hero",
-    page: "metodologia",
-    pageLabel: "Metodología",
+  "nuestra-mirada-hero": {
+    id: "nuestra-mirada-hero",
+    page: "nuestra-mirada",
+    pageLabel: "Nuestra mirada",
     slot: "hero",
     label: "Imagen principal",
-    image_path: "pages/metodologia/hero/current.jpg",
-    image_alt: images.designTable.alt,
+    image_path: "pages/nuestra-mirada/hero/current.jpg",
+    image_alt: "Estudio de paisajismo Palma, Isabella de Sousa y Heidi Ignatov",
     image_width: images.designTable.width,
     image_height: images.designTable.height,
     fallback: images.designTable,
+  },
+  "nuestra-mirada-heidi": {
+    id: "nuestra-mirada-heidi",
+    page: "nuestra-mirada",
+    pageLabel: "Nuestra mirada",
+    slot: "heidi",
+    label: "Heidi Ignatov",
+    image_path: "pages/nuestra-mirada/heidi/current.jpg",
+    image_alt: "Heidi Ignatov, paisajista de Palma",
+    image_width: images.founders.width,
+    image_height: images.founders.height,
+    fallback: images.founders,
   },
   "contact-founders": {
     id: "contact-founders",

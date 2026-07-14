@@ -7,15 +7,14 @@ import { OutlineLink, TextLink } from "./buttons";
 import { LogoFull } from "./logo";
 
 const links = [
-  { href: "/que-disenamos", labels: ["Qué diseñamos", "Áreas de trabajo"] },
-  { href: "/proyectos", labels: ["Proyectos", "Proyectos"] },
-  { href: "/metodologia", labels: ["Metodología", "Metodología"] },
+  { href: "/que-disenamos", label: "Qué diseñamos" },
+  { href: "/proyectos", label: "Proyectos" },
+  { href: "/nuestra-mirada", label: "Nuestra mirada" },
 ];
 
 export function Nav() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [labelIndex, setLabelIndex] = useState(0);
   const [navScrolled, setNavScrolled] = useState(false);
 
   useEffect(() => {
@@ -43,25 +42,9 @@ export function Nav() {
         </Link>
 
         <div className="hidden items-center gap-8 md:flex">
-          <div className="relative inline-flex flex-col items-center">
-            <TextLink
-              href="/que-disenamos"
-              className={isActive("/que-disenamos") ? "text-[#4a6038]" : "text-[#131419]"}
-            >
-              {links[0].labels[labelIndex]}
-            </TextLink>
-            <button
-              type="button"
-              onClick={() => setLabelIndex((current) => (current + 1) % 2)}
-              title="Cambiar texto del menú"
-              className="absolute top-[calc(100%+9px)] inline-flex h-[18px] w-[18px] items-center justify-center rounded-full border border-[#d8d3c8] text-[9px] leading-none text-[#6b7f52] transition-colors hover:border-[#4a6038] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4a6038]/30"
-            >
-              ↻
-            </button>
-          </div>
-          {links.slice(1).map((link) => (
+          {links.map((link) => (
             <TextLink key={link.href} href={link.href} className={isActive(link.href) ? "text-[#4a6038]" : ""}>
-              {link.labels[0]}
+              {link.label}
             </TextLink>
           ))}
           <OutlineLink href="/contacto" className="min-h-0 px-5 py-2 tracking-[0.14em]">
@@ -90,22 +73,9 @@ export function Nav() {
         }`}
       >
         <div className="flex flex-col gap-5 bg-[#f9f7f4]/98 px-5 py-6">
-          <div className="flex items-center gap-3">
-            <TextLink href="/que-disenamos" onClick={() => setMenuOpen(false)} className="text-[13px]">
-              {links[0].labels[labelIndex]}
-            </TextLink>
-            <button
-              type="button"
-              onClick={() => setLabelIndex((current) => (current + 1) % 2)}
-              title="Cambiar texto del menú"
-              className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-[#d8d3c8] text-[10px] text-[#6b7f52] transition-colors hover:border-[#4a6038]"
-            >
-              ↻
-            </button>
-          </div>
-          {links.slice(1).map((link) => (
+          {links.map((link) => (
             <TextLink key={link.href} href={link.href} onClick={() => setMenuOpen(false)} className="text-[13px]">
-              {link.labels[0]}
+              {link.label}
             </TextLink>
           ))}
           <TextLink href="/contacto" onClick={() => setMenuOpen(false)} className="text-[13px]">

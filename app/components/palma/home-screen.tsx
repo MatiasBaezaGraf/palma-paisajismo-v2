@@ -72,7 +72,7 @@ export function HomeScreen({
               Cada proyecto parte de una escucha profunda del lugar, del cliente y de su contexto para dar
               forma a paisajes con identidad propia, pensados para madurar y evolucionar con el tiempo.
             </p>
-            <PrimaryLink href="/metodologia">Nuestra metodología →</PrimaryLink>
+            <PrimaryLink href="/nuestra-mirada">Conocé nuestra mirada →</PrimaryLink>
           </div>
         </section>
       </Reveal>

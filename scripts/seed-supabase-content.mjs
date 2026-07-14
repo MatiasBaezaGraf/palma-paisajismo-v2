@@ -136,7 +136,11 @@ const projectTypes = [
 const pageImages = [
   {
     file: "palma-06.jpg",
-    path: "pages/metodologia/hero/current.jpg",
+    path: "pages/nuestra-mirada/hero/current.jpg",
+  },
+  {
+    file: "palma-05.jpg",
+    path: "pages/nuestra-mirada/heidi/current.jpg",
   },
   {
     file: "palma-05.jpg",

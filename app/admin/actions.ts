@@ -214,8 +214,8 @@ export async function updatePageImage(formData: FormData) {
 
   await uploadFixedImage(formData.get("image"), config.image_path, admin.supabase);
 
-  if (config.page === "metodologia") {
-    revalidatePath("/metodologia");
+  if (config.page === "nuestra-mirada") {
+    revalidatePath("/nuestra-mirada");
   }
 
   if (config.page === "contacto") {

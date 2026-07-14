@@ -6,7 +6,7 @@ import type { HomeImageRow, PageImageRow, ProjectTypeRow } from "../lib/content"
 import { AdminImageCard } from "./admin-image-card";
 import { updateHomeImage, updatePageImage, updateProjectTypeImage } from "./actions";
 
-type TabId = "home" | "que-disenamos" | "metodologia" | "contacto";
+type TabId = "home" | "que-disenamos" | "nuestra-mirada" | "contacto";
 
 export function AdminDashboard({
   homeImages,
@@ -36,11 +36,11 @@ export function AdminDashboard({
         count: projectTypes.length,
       },
       {
-        id: "metodologia" as const,
+        id: "nuestra-mirada" as const,
         eyebrow: "Página",
-        title: "Metodología",
-        description: "Imagen principal de la página de metodología.",
-        count: pageImages.filter((item) => item.page === "metodologia").length,
+        title: "Nuestra mirada",
+        description: "Imágenes principales de la página Nuestra mirada.",
+        count: pageImages.filter((item) => item.page === "nuestra-mirada").length,
       },
       {
         id: "contacto" as const,
@@ -54,7 +54,7 @@ export function AdminDashboard({
   );
 
   const active = tabs.find((tab) => tab.id === activeTab) ?? tabs[0];
-  const methodologyImages = pageImages.filter((item) => item.page === "metodologia");
+  const nuestraMiradaImages = pageImages.filter((item) => item.page === "nuestra-mirada");
   const contactImages = pageImages.filter((item) => item.page === "contacto");
 
   return (
@@ -139,10 +139,10 @@ export function AdminDashboard({
           </CardGrid>
         ) : null}
 
-        {activeTab === "metodologia" ? (
+        {activeTab === "nuestra-mirada" ? (
           <CardGrid>
-            {methodologyImages.length ? (
-              methodologyImages.map((image) => (
+            {nuestraMiradaImages.length ? (
+              nuestraMiradaImages.map((image) => (
                 <AdminImageCard
                   key={image.id}
                   item={image}
