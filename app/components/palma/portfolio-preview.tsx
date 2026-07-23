@@ -9,7 +9,7 @@ export function PortfolioPreview() {
           <p className="mb-3 text-[10px] font-normal uppercase tracking-[0.28em] text-[#a9a79c]">
             Portfolio
           </p>
-          <h2 className="text-[clamp(24px,3vw,42px)] font-light italic text-[#131419]">
+          <h2 className="text-[clamp(24px,3vw,42px)] font-light italic text-[#3d2e69]">
             Algunos de nuestros proyectos
           </h2>
         </div>

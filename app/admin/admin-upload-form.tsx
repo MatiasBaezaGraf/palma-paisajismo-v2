@@ -184,7 +184,7 @@ export function AdminUploadForm({
           <p className="truncate text-[10px] font-normal uppercase tracking-[0.16em] text-[#a9a79c] sm:tracking-[0.2em]">
             {subtitle}
           </p>
-          <h2 className="mt-1 text-[18px] font-light italic leading-tight text-[#131419] text-pretty sm:text-[20px]">
+          <h2 className="mt-1 text-[18px] font-light italic leading-tight text-[#3d2e69] text-pretty sm:text-[20px]">
             {title}
           </h2>
         </div>

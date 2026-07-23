@@ -56,7 +56,7 @@ export function HomeScreen({
             <p className="mb-6 text-[10px] font-normal uppercase tracking-[0.28em] text-[#a9a79c]">
               El estudio · Desde 2011
             </p>
-            <h2 className="text-[clamp(27px,3.5vw,46px)] font-normal leading-tight tracking-normal text-[#131419] text-pretty">
+            <h2 className="text-[clamp(27px,3.5vw,46px)] font-normal leading-tight tracking-normal text-[#3d2e69] text-pretty">
               Diseñamos entornos que conectan a las personas con la naturaleza
             </h2>
           </div>
@@ -94,7 +94,7 @@ export function HomeScreen({
                 <p className="mb-5 text-[10px] font-normal uppercase tracking-[0.28em] text-[#9a9486]">
                   Tipos de proyecto
                 </p>
-                <h2 className="text-[clamp(24px,3vw,40px)] font-light italic leading-tight text-[#131419] text-pretty">
+                <h2 className="text-[clamp(24px,3vw,40px)] font-light italic leading-tight text-[#3d2e69] text-pretty">
                   Trabajamos en distintos contextos y escalas
                 </h2>
               </div>

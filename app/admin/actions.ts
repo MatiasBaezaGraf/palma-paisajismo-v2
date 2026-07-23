@@ -203,6 +203,44 @@ export async function updateProjectTypeImage(formData: FormData) {
   revalidatePath("/admin");
 }
 
+export async function updateProjectTypeText(formData: FormData) {
+  const admin = await requireAdminSession();
+  const slug = getString(formData, "slug");
+
+  if (!slug) {
+    throw new Error("Slug inválido.");
+  }
+
+  const stepCount = getPositiveInteger(formData, "step_count") ?? 0;
+  const steps: { title: string; body: string }[] = [];
+
+  for (let index = 0; index < stepCount; index += 1) {
+    const title = getString(formData, `step_title_${index}`);
+    const body = getString(formData, `step_body_${index}`);
+
+    if (title || body) {
+      steps.push({ title, body });
+    }
+  }
+
+  const update = {
+    detail_intro: getString(formData, "detail_intro"),
+    detail_steps: steps,
+    updated_at: new Date().toISOString(),
+    updated_by: admin.userId,
+  };
+
+  const { error } = await admin.supabase.from("project_types").update(update).eq("slug", slug);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  revalidatePath("/que-disenamos");
+  revalidatePath(`/que-disenamos/${slug}`);
+  revalidatePath("/admin");
+}
+
 export async function updatePageImage(formData: FormData) {
   const admin = await requireAdminSession();
   const imageId = getString(formData, "imageId");

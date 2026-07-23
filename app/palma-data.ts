@@ -5,12 +5,24 @@ export type ImageAsset = {
   height: number;
 };
 
+export type ProjectStep = {
+  title: string;
+  body: string;
+};
+
 export type ProjectType = {
   slug: string;
   title: string;
   desc: string;
   image: ImageAsset;
+  intro?: string;
+  steps?: ProjectStep[];
 };
+
+export const DETAIL_STEP_COUNT = 3;
+
+export const fallbackTypeIntro =
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
 
 export type MethodStep = {
   n: string;

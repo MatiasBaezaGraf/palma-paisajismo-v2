@@ -27,7 +27,7 @@ export function PageHeader({
         <p className="mb-[18px] text-[10px] font-normal uppercase tracking-[0.28em] text-[#a9a79c]">
           {eyebrow}
         </p>
-        <h1 className="mb-5 text-[clamp(40px,6.5vw,84px)] font-light italic leading-none text-[#131419]">
+        <h1 className="mb-5 text-[clamp(40px,6.5vw,84px)] font-light italic leading-none text-[#3d2e69]">
           {title}
         </h1>
         <p className="max-w-xl text-[15px] font-light leading-[1.85] text-[#777674] text-pretty">
@@ -80,7 +80,7 @@ export function Cta({
   return (
     <section className="mx-5 mt-14 flex flex-col items-start gap-6 bg-[#e6e3cc] px-6 py-12 md:mx-[52px] md:mt-[100px] md:flex-row md:items-center md:justify-between md:gap-16 md:px-[60px] md:py-[72px]">
       <div>
-        <h3 className="text-[clamp(22px,2.8vw,40px)] font-light italic leading-tight text-[#131419] text-pretty">
+        <h3 className="text-[clamp(22px,2.8vw,40px)] font-light italic leading-tight text-[#3d2e69] text-pretty">
           {title}
         </h3>
         {description ? (

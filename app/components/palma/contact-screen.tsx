@@ -28,7 +28,7 @@ export function ContactScreen({ foundersImage }: { foundersImage: ImageAsset }) 
             <p className="mb-6 text-[10px] font-normal uppercase tracking-[0.28em] text-[#a9a79c]">
               Contacto
             </p>
-            <h1 className="mb-10 text-[clamp(32px,4.5vw,60px)] font-light italic leading-[1.12] text-[#131419] text-pretty">
+            <h1 className="mb-10 text-[clamp(32px,4.5vw,60px)] font-light italic leading-[1.12] text-[#3d2e69] text-pretty">
               Hablemos sobre
               <br />
               tu proyecto
@@ -63,7 +63,7 @@ export function ContactScreen({ foundersImage }: { foundersImage: ImageAsset }) 
           {submitted ? (
             <div className="flex flex-col gap-5 pt-12 md:ml-auto md:max-w-[620px] md:border-t md:border-[#e0ddd7] md:pt-8">
               <div className="h-0.5 w-10 bg-[#4a6038]" />
-              <h3 className="text-[34px] font-light italic leading-tight text-[#131419]">
+              <h3 className="text-[34px] font-light italic leading-tight text-[#3d2e69]">
                 Gracias por escribirnos
               </h3>
               <p className="text-[15px] font-light leading-[1.85] text-[#493f2c]">

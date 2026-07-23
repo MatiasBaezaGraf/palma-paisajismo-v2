@@ -25,7 +25,7 @@ export default async function AdminLoginPage({
     <main className="flex min-h-screen items-center justify-center bg-[#f9f7f4] px-5 py-10 text-[#131419]">
       <section className="w-full max-w-md border border-[#e0ddd7] bg-white/50 p-6 md:p-8">
         <p className="text-[10px] font-normal uppercase tracking-[0.24em] text-[#a9a79c]">Palma Admin</p>
-        <h1 className="mt-3 text-[clamp(30px,7vw,44px)] font-light italic leading-none">Ingresar</h1>
+        <h1 className="mt-3 text-[clamp(30px,7vw,44px)] font-light italic leading-none text-[#3d2e69]">Ingresar</h1>
         <p className="mt-4 text-sm font-light leading-relaxed text-[#777674]">
           Gestioná las imágenes principales del sitio y los tipos de proyecto.
         </p>

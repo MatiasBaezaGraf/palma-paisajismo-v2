@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import type { HomeImageRow, PageImageRow, ProjectTypeRow } from "../lib/content";
 import { AdminImageCard } from "./admin-image-card";
+import { AdminProjectTypeText } from "./admin-project-type-text";
 import { updateHomeImage, updatePageImage, updateProjectTypeImage } from "./actions";
 
 type TabId = "home" | "que-disenamos" | "nuestra-mirada" | "contacto";
@@ -32,7 +33,7 @@ export function AdminDashboard({
         id: "que-disenamos" as const,
         eyebrow: "Página",
         title: "Qué diseñamos",
-        description: "Fotos de cada tipo de proyecto.",
+        description: "Foto y texto de la subpágina de cada tipo de proyecto.",
         count: projectTypes.length,
       },
       {
@@ -94,7 +95,7 @@ export function AdminDashboard({
         <div className="mb-5 grid gap-3 border-b border-[#e0ddd7] pb-5 md:mb-6 md:grid-cols-[1fr_auto] md:items-end">
           <div className="min-w-0">
             <p className="text-[10px] font-normal uppercase tracking-[0.24em] text-[#a9a79c]">{active.eyebrow}</p>
-            <h2 className="mt-2 text-[clamp(25px,8vw,42px)] font-light italic leading-none text-[#131419]">
+            <h2 className="mt-2 text-[clamp(25px,8vw,42px)] font-light italic leading-none text-[#3d2e69]">
               {active.title}
             </h2>
             <p className="mt-3 max-w-2xl text-sm font-light leading-relaxed text-[#777674]">
@@ -122,21 +123,26 @@ export function AdminDashboard({
         ) : null}
 
         {activeTab === "que-disenamos" ? (
-          <CardGrid dense>
-            {projectTypes.length ? (
-              projectTypes.map((type) => (
-                <AdminImageCard
+          projectTypes.length ? (
+            <div className="grid min-w-0 gap-6">
+              {projectTypes.map((type) => (
+                <div
                   key={type.slug}
-                  item={type}
-                  action={updateProjectTypeImage}
-                  hiddenName="slug"
-                  hiddenValue={type.slug}
-                />
-              ))
-            ) : (
-              <EmptyState />
-            )}
-          </CardGrid>
+                  className="grid min-w-0 gap-4 border border-[#ece9e4] bg-[#fbfaf7] p-3 sm:p-4 lg:grid-cols-2 lg:gap-5"
+                >
+                  <AdminImageCard
+                    item={type}
+                    action={updateProjectTypeImage}
+                    hiddenName="slug"
+                    hiddenValue={type.slug}
+                  />
+                  <AdminProjectTypeText item={type} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <EmptyState />
+          )
         ) : null}
 
         {activeTab === "nuestra-mirada" ? (

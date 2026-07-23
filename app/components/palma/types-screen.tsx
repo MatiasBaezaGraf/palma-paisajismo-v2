@@ -22,7 +22,7 @@ export function TypesScreen({ projectTypes }: { projectTypes: ProjectType[] }) {
               className="group grid w-full cursor-pointer items-stretch gap-[18px] border-b border-[#e0ddd7] text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4a6038]/30 md:grid-cols-[5fr_7fr] md:gap-[60px]"
             >
               <div className="flex flex-col justify-center gap-3.5 py-6 md:py-0">
-                <h2 className="text-[clamp(22px,2.6vw,30px)] font-light italic leading-tight text-[#131419] transition-colors group-hover:text-[#4a6038] text-pretty">
+                <h2 className="text-[clamp(22px,2.6vw,30px)] font-light italic leading-tight text-[#3d2e69] transition-colors group-hover:text-[#4a6038] text-pretty">
                   {type.title}
                 </h2>
                 <p className="max-w-sm text-sm font-light leading-[1.7] text-[#777674] text-pretty">

@@ -17,9 +17,11 @@ const afterWorkParagraphs = [
 export function NuestraMiradaScreen({
   heroImage,
   heidiImage,
+  isabellaImage,
 }: {
   heroImage: ImageAsset;
   heidiImage: ImageAsset;
+  isabellaImage: ImageAsset;
 }) {
   return (
     <div>
@@ -76,26 +78,27 @@ export function NuestraMiradaScreen({
             <p className="mb-4 text-[10px] font-normal uppercase tracking-[0.28em] text-[#a9a79c]">
               El estudio
             </p>
-            <h2 className="mb-10 text-[clamp(24px,2.8vw,38px)] font-light italic leading-tight text-[#131419] text-pretty md:mb-12">
+            <h2 className="mb-10 text-[clamp(24px,2.8vw,38px)] font-light italic leading-tight text-[#3d2e69] text-pretty md:mb-12">
               Isabella de Sousa · Heidi Ignatov
             </h2>
           </div>
         </Reveal>
-        <div className="grid gap-10 md:grid-cols-[5fr_7fr] md:gap-20 lg:gap-[96px]">
+        <div className="grid gap-10 md:grid-cols-2 md:gap-20 lg:gap-[96px]">
           <Reveal delay={40}>
+            <TeamCard
+              image={isabellaImage}
+              name="Isabella de Sousa"
+              role="Paisajista"
+              body="Texto pendiente de confirmación."
+              pending
+            />
+          </Reveal>
+          <Reveal delay={90}>
             <TeamCard
               image={heidiImage}
               name="Heidi Ignatov"
               role="Paisajista"
               body="Me formé como paisajista en Pampa Infinita en 2010, luego de un recorrido previo vinculado al diseño. Desde entonces nunca dejé de estudiar, investigar y descubrir nuevas maneras de mirar el paisaje. Mi recorrido me llevó desde las especies nativas y los distintos ecosistemas hasta los proyectos de gran escala, sin perder el interés por los jardines de escala acotada, donde cada elemento tiene un propósito y cada detalle transforma la experiencia del espacio. Mi búsqueda permanente es la belleza. Mis ojos siempre se posan allí: en la luz, el movimiento, los reflejos y esos detalles sutiles que hacen único a cada paisaje."
-            />
-          </Reveal>
-          <Reveal delay={90}>
-            <TeamCard
-              name="Isabella de Sousa"
-              role="Paisajista"
-              body="Texto pendiente de confirmación."
-              pending
             />
           </Reveal>
         </div>
@@ -174,7 +177,7 @@ function TeamCard({
           </span>
         </div>
       )}
-      <h3 className="mb-1 text-lg font-normal italic text-[#131419]">{name}</h3>
+      <h3 className="mb-1 text-lg font-normal italic text-[#3d2e69]">{name}</h3>
       <p className="mb-[18px] text-[10px] font-normal uppercase tracking-[0.16em] text-[#6b7f52]">{role}</p>
       <p
         className={`text-sm font-light leading-[1.85] text-pretty ${

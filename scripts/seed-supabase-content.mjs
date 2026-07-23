@@ -144,7 +144,29 @@ const pageImages = [
   },
   {
     file: "palma-05.jpg",
+    path: "pages/nuestra-mirada/isabella/current.jpg",
+  },
+  {
+    file: "palma-05.jpg",
     path: "pages/contacto/founders/current.jpg",
+  },
+];
+
+const detailIntro =
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+
+const detailSteps = [
+  {
+    title: "Relevamiento del espacio",
+    body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.",
+  },
+  {
+    title: "Propuesta de diseño",
+    body: "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim.",
+  },
+  {
+    title: "Ejecución y acompañamiento",
+    body: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto.",
   },
 ];
 
@@ -221,6 +243,8 @@ async function main() {
       image_alt: `image-${item.sort_order}`,
       image_width: item.width,
       image_height: item.height,
+      detail_intro: detailIntro,
+      detail_steps: detailSteps,
       is_active: true,
     })),
     { onConflict: "slug" },

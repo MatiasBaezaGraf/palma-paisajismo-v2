@@ -1,4 +1,12 @@
-import { images, projectTypes as fallbackProjectTypes, type ImageAsset, type ProjectType } from "../palma-data";
+import {
+  images,
+  projectTypes as fallbackProjectTypes,
+  typeProcessSteps,
+  fallbackTypeIntro,
+  type ImageAsset,
+  type ProjectStep,
+  type ProjectType,
+} from "../palma-data";
 import { getPublicImageUrl } from "./images";
 import { pageImageConfigs, type PageImageConfig, type PageImageId } from "./page-images";
 import { createClient } from "./supabase/server";
@@ -26,6 +34,8 @@ export type ProjectTypeRow = {
   image_alt: string;
   image_width: number;
   image_height: number;
+  detail_intro: string;
+  detail_steps: ProjectStep[];
   is_active: boolean;
   updated_at: string;
 };
@@ -118,12 +128,32 @@ async function pageImageRowFromConfig(config: PageImageConfig): Promise<PageImag
   };
 }
 
+function normalizeSteps(value: unknown): ProjectStep[] {
+  if (!Array.isArray(value)) {
+    return typeProcessSteps;
+  }
+
+  const steps = value
+    .map((item) => {
+      const record = item as Record<string, unknown>;
+      return {
+        title: typeof record?.title === "string" ? record.title : "",
+        body: typeof record?.body === "string" ? record.body : "",
+      };
+    })
+    .filter((step) => step.title.trim() || step.body.trim());
+
+  return steps.length ? steps : typeProcessSteps;
+}
+
 export function projectTypeFromRow(row: ProjectTypeRow): ProjectType {
   return {
     slug: row.slug,
     title: row.title,
     desc: row.description,
     image: imageFromRow(row),
+    intro: row.detail_intro?.trim() ? row.detail_intro : fallbackTypeIntro,
+    steps: normalizeSteps(row.detail_steps),
   };
 }
 
@@ -150,7 +180,7 @@ export async function getProjectTypes(): Promise<ProjectType[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("project_types")
-    .select("slug, title, description, sort_order, image_path, image_alt, image_width, image_height, is_active, updated_at")
+    .select("slug, title, description, sort_order, image_path, image_alt, image_width, image_height, detail_intro, detail_steps, is_active, updated_at")
     .eq("is_active", true)
     .order("sort_order", { ascending: true });
 
@@ -166,7 +196,7 @@ export async function getProjectType(slug: string): Promise<ProjectType | null> 
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("project_types")
-    .select("slug, title, description, sort_order, image_path, image_alt, image_width, image_height, is_active, updated_at")
+    .select("slug, title, description, sort_order, image_path, image_alt, image_width, image_height, detail_intro, detail_steps, is_active, updated_at")
     .eq("slug", slug)
     .eq("is_active", true)
     .maybeSingle();
@@ -196,7 +226,7 @@ export async function getAdminContent() {
       .order("slot", { ascending: true }),
     supabase
       .from("project_types")
-      .select("slug, title, description, sort_order, image_path, image_alt, image_width, image_height, is_active, updated_at")
+      .select("slug, title, description, sort_order, image_path, image_alt, image_width, image_height, detail_intro, detail_steps, is_active, updated_at")
       .order("sort_order", { ascending: true }),
   ]);
 

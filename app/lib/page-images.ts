@@ -1,6 +1,10 @@
 import { images, type ImageAsset } from "../palma-data";
 
-export type PageImageId = "nuestra-mirada-hero" | "nuestra-mirada-heidi" | "contact-founders";
+export type PageImageId =
+  | "nuestra-mirada-hero"
+  | "nuestra-mirada-heidi"
+  | "nuestra-mirada-isabella"
+  | "contact-founders";
 
 export type PageImageConfig = {
   id: PageImageId;
@@ -36,6 +40,18 @@ export const pageImageConfigs = {
     label: "Heidi Ignatov",
     image_path: "pages/nuestra-mirada/heidi/current.jpg",
     image_alt: "Heidi Ignatov, paisajista de Palma",
+    image_width: images.founders.width,
+    image_height: images.founders.height,
+    fallback: images.founders,
+  },
+  "nuestra-mirada-isabella": {
+    id: "nuestra-mirada-isabella",
+    page: "nuestra-mirada",
+    pageLabel: "Nuestra mirada",
+    slot: "isabella",
+    label: "Isabella de Sousa",
+    image_path: "pages/nuestra-mirada/isabella/current.jpg",
+    image_alt: "Isabella de Sousa, paisajista de Palma",
     image_width: images.founders.width,
     image_height: images.founders.height,
     fallback: images.founders,

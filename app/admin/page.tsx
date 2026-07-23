@@ -13,7 +13,7 @@ export default async function AdminPage() {
         <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-5 px-4 py-6 sm:px-6 md:flex-row md:items-center md:justify-between md:px-[52px] md:py-8">
           <div className="min-w-0">
             <p className="text-[10px] font-normal uppercase tracking-[0.24em] text-[#9a9486]">Admin</p>
-            <h1 className="mt-2 text-[clamp(28px,9vw,52px)] font-light italic leading-none">
+            <h1 className="mt-2 text-[clamp(28px,9vw,52px)] font-light italic leading-none text-[#3d2e69]">
               Contenido del sitio
             </h1>
             <p className="mt-3 break-words text-sm font-light text-[#777674]">{admin.email}</p>
