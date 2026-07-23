@@ -270,7 +270,7 @@ export function AdminUploadForm({
               onClick={handleEdit}
               className="inline-flex min-h-11 min-w-0 items-center justify-center border border-[#131419] px-3 py-3 text-center text-[11px] font-normal uppercase tracking-[0.12em] text-[#131419] transition-colors hover:bg-[#131419] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#131419]/20 sm:px-4 sm:tracking-[0.16em]"
             >
-              Editar
+              {isProjectType ? "Editar imagen" : "Editar"}
             </button>
           )}
         </div>
