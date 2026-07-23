@@ -223,7 +223,14 @@ export async function updateProjectTypeText(formData: FormData) {
     }
   }
 
+  const description = getString(formData, "description");
+
+  if (!description) {
+    throw new Error("El subtítulo es obligatorio.");
+  }
+
   const update = {
+    description,
     detail_intro: getString(formData, "detail_intro"),
     detail_steps: steps,
     updated_at: new Date().toISOString(),
