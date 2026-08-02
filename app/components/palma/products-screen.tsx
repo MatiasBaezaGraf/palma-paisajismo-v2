@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { Product } from "../../lib/content";
 import { BottomBar } from "./layout-parts";
+import { Reveal } from "./reveal";
 
 export function ProductsScreen({ products }: { products: Product[] }) {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -45,26 +46,29 @@ export function ProductsScreen({ products }: { products: Product[] }) {
       </header>
 
       <section className="mx-auto grid max-w-[1440px] grid-cols-1 gap-x-20 gap-y-12 px-5 py-12 md:grid-cols-2 md:px-[52px] md:py-20 xl:grid-cols-3">
-        {products.map((product) => (
-          <button
-            key={product.slug}
-            type="button"
-            onClick={() => setSelectedProduct(product)}
-            className="group grid min-w-0 gap-5 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4a6038]/35"
-          >
-            <ProductVisual product={product} />
-            <span className="grid min-w-0 gap-2">
-              <span className="text-[17px] font-light italic leading-tight text-[#131419] transition-colors group-hover:text-[#4a6038]">
-                {product.title}
+        {products.map((product, index) => (
+          <Reveal key={product.slug} delay={Math.min(index, 5) * 90}>
+            <button
+              type="button"
+              onClick={() => setSelectedProduct(product)}
+              className="group grid min-w-0 gap-5 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4a6038]/35"
+            >
+              <ProductVisual product={product} />
+              <span className="grid min-w-0 gap-2">
+                <span className="text-[17px] font-light italic leading-tight text-[#131419] transition-colors group-hover:text-[#4a6038]">
+                  {product.title}
+                </span>
+                <span className="text-[15px] font-light leading-tight text-[#415733]">{product.price}</span>
+                <span className="text-[13px] font-light leading-[1.7] text-[#8a8883]">{product.subtitle}</span>
               </span>
-              <span className="text-[15px] font-light leading-tight text-[#415733]">{product.price}</span>
-              <span className="text-[13px] font-light leading-[1.7] text-[#8a8883]">{product.subtitle}</span>
-            </span>
-          </button>
+            </button>
+          </Reveal>
         ))}
       </section>
 
-      <BottomBar names />
+      <Reveal>
+        <BottomBar names />
+      </Reveal>
 
       {selectedProduct ? (
         <ProductModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
@@ -79,14 +83,14 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
       role="dialog"
       aria-modal="true"
       aria-labelledby="product-modal-title"
-      className="fixed inset-0 z-[80] overflow-y-auto bg-[#131419]/70 px-4 py-5 md:px-8 md:py-8"
+      className="fixed inset-0 z-[80] animate-[fadeIn_0.28s_ease-out_both] overflow-y-auto bg-[#131419]/70 px-4 py-5 motion-reduce:animate-none md:px-8 md:py-8"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) {
           onClose();
         }
       }}
     >
-      <div className="mx-auto grid min-h-[calc(100vh-40px)] w-full max-w-[1240px] bg-[#f9f7f4] md:min-h-[min(86vh,866px)] md:grid-cols-[1fr_1fr]">
+      <div className="mx-auto grid min-h-[calc(100vh-40px)] w-full max-w-[1240px] animate-[fadeUp_0.42s_0.06s_ease-out_both] bg-[#f9f7f4] motion-reduce:animate-none md:min-h-[min(86vh,866px)] md:grid-cols-[1fr_1fr]">
         <div className="relative min-h-[320px] md:min-h-0">
           <ProductVisual product={product} large />
         </div>
