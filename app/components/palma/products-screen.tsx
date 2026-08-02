@@ -47,11 +47,11 @@ export function ProductsScreen({ products }: { products: Product[] }) {
 
       <section className="mx-auto grid max-w-[1440px] grid-cols-1 gap-x-20 gap-y-12 px-5 py-12 md:grid-cols-2 md:px-[52px] md:py-20 xl:grid-cols-3">
         {products.map((product, index) => (
-          <Reveal key={product.slug} delay={Math.min(index, 5) * 90}>
+          <Reveal key={product.slug} className="w-full" delay={Math.min(index, 5) * 90}>
             <button
               type="button"
               onClick={() => setSelectedProduct(product)}
-              className="group grid min-w-0 gap-5 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4a6038]/35"
+              className="group grid w-full min-w-0 gap-5 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4a6038]/35"
             >
               <ProductVisual product={product} />
               <span className="grid min-w-0 gap-2">
@@ -91,7 +91,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
       }}
     >
       <div className="mx-auto grid min-h-[calc(100vh-40px)] w-full max-w-[1240px] animate-[fadeUp_0.42s_0.06s_ease-out_both] bg-[#f9f7f4] motion-reduce:animate-none md:min-h-[min(86vh,866px)] md:grid-cols-[1fr_1fr]">
-        <div className="relative min-h-[320px] md:min-h-0">
+        <div className="relative md:min-h-0">
           <ProductVisual product={product} large />
         </div>
 
@@ -136,7 +136,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
 }
 
 function ProductVisual({ product, large = false }: { product: Product; large?: boolean }) {
-  const sizeClass = large ? "h-full min-h-[320px]" : "aspect-[1.22/1]";
+  const sizeClass = large ? "aspect-[4/3] w-full md:h-full md:min-h-[520px]" : "aspect-[4/3] w-full";
 
   if (product.image) {
     return (
@@ -154,7 +154,7 @@ function ProductVisual({ product, large = false }: { product: Product; large?: b
 
   return (
     <span
-      className={`flex items-center justify-center bg-[#f3f1eb] ${sizeClass}`}
+      className={`flex items-center justify-center overflow-hidden bg-[#f3f1eb] ${sizeClass}`}
       style={{
         backgroundImage:
           "repeating-linear-gradient(135deg, #f7f5ef 0 12px, #ece9e2 12px 24px)",
