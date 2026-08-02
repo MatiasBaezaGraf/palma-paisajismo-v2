@@ -9,10 +9,11 @@ import { LogoFull } from "./logo";
 const links = [
   { href: "/que-disenamos", label: "Qué diseñamos" },
   { href: "/proyectos", label: "Proyectos" },
+  { href: "/productos", label: "Productos", section: "productos" },
   { href: "/nuestra-mirada", label: "Nuestra mirada" },
 ];
 
-export function Nav() {
+export function Nav({ showProducts }: { showProducts: boolean }) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [navScrolled, setNavScrolled] = useState(false);
@@ -25,6 +26,7 @@ export function Nav() {
   }, []);
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+  const visibleLinks = links.filter((link) => link.section !== "productos" || showProducts);
 
   return (
     <nav
@@ -42,7 +44,7 @@ export function Nav() {
         </Link>
 
         <div className="hidden items-center gap-8 md:flex">
-          {links.map((link) => (
+          {visibleLinks.map((link) => (
             <TextLink key={link.href} href={link.href} className={isActive(link.href) ? "text-[#4a6038]" : ""}>
               {link.label}
             </TextLink>
@@ -73,7 +75,7 @@ export function Nav() {
         }`}
       >
         <div className="flex flex-col gap-5 bg-[#f9f7f4]/98 px-5 py-6">
-          {links.map((link) => (
+          {visibleLinks.map((link) => (
             <TextLink key={link.href} href={link.href} onClick={() => setMenuOpen(false)} className="text-[13px]">
               {link.label}
             </TextLink>

@@ -170,6 +170,57 @@ const detailSteps = [
   },
 ];
 
+const products = [
+  {
+    slug: "maceta-de-terracota-artesanal",
+    title: "Maceta de terracota artesanal",
+    price: "$ 45.000 ARS",
+    shortDesc: "Pieza torneada a mano, ideal para especies de mediana escala.",
+    desc: "Maceta de terracota torneada a mano por artesanos locales. Su porosidad favorece la aireación de la raíz y su pátina natural se profundiza con el tiempo y la intemperie. Disponible en distintos diámetros según el proyecto.",
+    sortOrder: 1,
+  },
+  {
+    slug: "banco-de-jardin-en-madera-de-teca",
+    title: "Banco de jardín en madera de teca",
+    price: "$ 128.000 ARS",
+    shortDesc: "Mobiliario exterior resistente a la intemperie.",
+    desc: "Banco macizo de teca, pensado para permanecer a la intemperie durante todo el año. Su diseño simple acompaña tanto jardines contemporáneos como paisajes más silvestres.",
+    sortOrder: 2,
+  },
+  {
+    slug: "set-de-herramientas-de-jardineria",
+    title: "Set de herramientas de jardinería",
+    price: "$ 38.500 ARS",
+    shortDesc: "Herramientas manuales de uso cotidiano en obra.",
+    desc: "Conjunto de herramientas manuales — pala de mano, tijera de podar y rastrillo — con mango de madera y cabezal de acero. Las mismas que usamos en el mantenimiento diario de nuestros proyectos.",
+    sortOrder: 3,
+  },
+  {
+    slug: "luminaria-solar-de-exterior",
+    title: "Luminaria solar de exterior",
+    price: "$ 22.000 ARS",
+    shortDesc: "Iluminación de bajo consumo para senderos y canteros.",
+    desc: "Luminaria solar de bajo perfil, pensada para marcar recorridos y resaltar canteros durante la noche sin necesidad de instalación eléctrica.",
+    sortOrder: 4,
+  },
+  {
+    slug: "sustrato-premium-organico-20kg",
+    title: "Sustrato premium orgánico 20kg",
+    price: "$ 9.800 ARS",
+    shortDesc: "Mezcla balanceada para plantación y trasplante.",
+    desc: "Sustrato orgánico balanceado, formulado para favorecer el enraizamiento en plantación y trasplante. Es el mismo que utilizamos en la preparación de canteros en obra.",
+    sortOrder: 5,
+  },
+  {
+    slug: "aspersor-de-riego-automatico",
+    title: "Aspersor de riego automático",
+    price: "$ 54.000 ARS",
+    shortDesc: "Riego programable para jardines de mediana escala.",
+    desc: "Aspersor con temporizador programable, pensado para automatizar el riego en jardines residenciales de mediana escala y reducir el consumo de agua.",
+    sortOrder: 6,
+  },
+];
+
 function contentTypeFor(fileName) {
   if (fileName.endsWith(".png")) return "image/png";
   if (fileName.endsWith(".webp")) return "image/webp";
@@ -250,6 +301,29 @@ async function main() {
     { onConflict: "slug" },
   );
   if (projectError) throw projectError;
+
+  const { error: sectionError } = await supabase
+    .from("site_sections")
+    .upsert({ slug: "productos", label: "Productos", is_enabled: true }, { onConflict: "slug" });
+  if (sectionError) throw sectionError;
+
+  const { error: productsError } = await supabase.from("products").upsert(
+    products.map((item) => ({
+      slug: item.slug,
+      title: item.title,
+      subtitle: item.shortDesc,
+      price: item.price,
+      description: item.desc,
+      sort_order: item.sortOrder,
+      image_path: "",
+      image_alt: item.title,
+      image_width: 1200,
+      image_height: 980,
+      is_active: true,
+    })),
+    { onConflict: "slug" },
+  );
+  if (productsError) throw productsError;
 
   const { data: users, error: usersError } = await supabase.auth.admin.listUsers({ page: 1, perPage: 100 });
   if (usersError) throw usersError;

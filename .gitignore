@@ -24,6 +24,9 @@
 .DS_Store
 *.pem
 /AGENT_CONTEXT.md
+/graphify-out/
+/product-*.png
+/test-results/
 /fotos pagina palma-*/
 
 # debug

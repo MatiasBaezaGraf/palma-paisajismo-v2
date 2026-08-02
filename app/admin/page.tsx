@@ -5,7 +5,7 @@ import { requireAdminSession } from "../lib/admin-auth";
 
 export default async function AdminPage() {
   const admin = await requireAdminSession();
-  const { homeImages, projectTypes, pageImages } = await getAdminContent();
+  const { homeImages, projectTypes, pageImages, siteSections, products } = await getAdminContent();
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#f9f7f4] text-[#131419]">
@@ -29,7 +29,13 @@ export default async function AdminPage() {
         </div>
       </header>
 
-      <AdminDashboard homeImages={homeImages} projectTypes={projectTypes} pageImages={pageImages} />
+      <AdminDashboard
+        homeImages={homeImages}
+        projectTypes={projectTypes}
+        pageImages={pageImages}
+        siteSections={siteSections}
+        products={products}
+      />
     </main>
   );
 }

@@ -2,23 +2,29 @@
 
 import { useMemo, useState } from "react";
 import type { ReactNode } from "react";
-import type { HomeImageRow, PageImageRow, ProjectTypeRow } from "../lib/content";
+import type { HomeImageRow, PageImageRow, ProductRow, ProjectTypeRow, SiteSectionRow } from "../lib/content";
 import { AdminImageCard } from "./admin-image-card";
+import { AdminProductForm } from "./admin-product-form";
 import { AdminProjectTypeText } from "./admin-project-type-text";
-import { updateHomeImage, updatePageImage, updateProjectTypeImage } from "./actions";
+import { updateHomeImage, updatePageImage, updateProductsSectionAvailability, updateProjectTypeImage } from "./actions";
 
-type TabId = "home" | "que-disenamos" | "nuestra-mirada" | "contacto";
+type TabId = "home" | "que-disenamos" | "productos" | "nuestra-mirada" | "contacto";
 
 export function AdminDashboard({
   homeImages,
   projectTypes,
   pageImages,
+  siteSections,
+  products,
 }: {
   homeImages: HomeImageRow[];
   projectTypes: ProjectTypeRow[];
   pageImages: PageImageRow[];
+  siteSections: SiteSectionRow[];
+  products: ProductRow[];
 }) {
   const [activeTab, setActiveTab] = useState<TabId>("home");
+  const productsSection = siteSections.find((section) => section.slug === "productos");
 
   const tabs = useMemo(
     () => [
@@ -37,6 +43,13 @@ export function AdminDashboard({
         count: projectTypes.length,
       },
       {
+        id: "productos" as const,
+        eyebrow: "Página",
+        title: "Productos",
+        description: "Disponibilidad de la sección y catálogo de productos.",
+        count: products.length,
+      },
+      {
         id: "nuestra-mirada" as const,
         eyebrow: "Página",
         title: "Nuestra mirada",
@@ -51,7 +64,7 @@ export function AdminDashboard({
         count: pageImages.filter((item) => item.page === "contacto").length,
       },
     ],
-    [homeImages.length, pageImages, projectTypes.length],
+    [homeImages.length, pageImages, products.length, projectTypes.length],
   );
 
   const active = tabs.find((tab) => tab.id === activeTab) ?? tabs[0];
@@ -145,6 +158,19 @@ export function AdminDashboard({
           )
         ) : null}
 
+        {activeTab === "productos" ? (
+          <div className="grid gap-5">
+            <ProductsAvailabilityControl isEnabled={productsSection?.is_enabled ?? true} />
+            <CardGrid dense>
+              {products.length ? (
+                products.map((product) => <AdminProductForm key={product.slug} product={product} />)
+              ) : (
+                <EmptyState />
+              )}
+            </CardGrid>
+          </div>
+        ) : null}
+
         {activeTab === "nuestra-mirada" ? (
           <CardGrid>
             {nuestraMiradaImages.length ? (
@@ -182,6 +208,44 @@ export function AdminDashboard({
         ) : null}
       </section>
     </div>
+  );
+}
+
+function ProductsAvailabilityControl({ isEnabled }: { isEnabled: boolean }) {
+  return (
+    <form
+      action={updateProductsSectionAvailability}
+      className="flex flex-col gap-4 border border-[#e0ddd7] bg-white/70 p-4 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <div>
+        <p className="text-[10px] font-normal uppercase tracking-[0.2em] text-[#a9a79c]">
+          Disponibilidad
+        </p>
+        <h3 className="mt-1 text-[20px] font-light italic leading-tight text-[#131419]">
+          Link de Productos en navegación
+        </h3>
+        <p className="mt-2 max-w-xl text-sm font-light leading-relaxed text-[#777674]">
+          Si se desactiva, el link desaparece del menú y /productos muestra el mensaje de sección en preparación.
+        </p>
+      </div>
+      <div className="flex shrink-0 flex-col gap-3 sm:items-end">
+        <label className="flex items-center gap-3 text-[11px] font-normal uppercase tracking-[0.16em] text-[#493f2c]">
+          <input
+            name="is_enabled"
+            type="checkbox"
+            defaultChecked={isEnabled}
+            className="h-4 w-4 accent-[#4a6038]"
+          />
+          Disponible
+        </label>
+        <button
+          type="submit"
+          className="inline-flex min-h-11 min-w-0 items-center justify-center bg-[#4a6038] px-4 py-3 text-center text-[11px] font-normal uppercase tracking-[0.14em] text-white transition-colors hover:bg-[#3d5030] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4a6038]/45"
+        >
+          Guardar estado
+        </button>
+      </div>
+    </form>
   );
 }
 

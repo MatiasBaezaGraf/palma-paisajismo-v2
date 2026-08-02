@@ -24,6 +24,10 @@ function getPositiveInteger(formData: FormData, key: string) {
   return Number.isInteger(value) && value > 0 ? value : null;
 }
 
+function getCheckbox(formData: FormData, key: string) {
+  return formData.get(key) === "on";
+}
+
 function safeNextPath(value: string) {
   return value.startsWith("/") && !value.startsWith("//") ? value : "/admin";
 }
@@ -267,5 +271,77 @@ export async function updatePageImage(formData: FormData) {
     revalidatePath("/contacto");
   }
 
+  revalidatePath("/admin");
+}
+
+export async function updateProductsSectionAvailability(formData: FormData) {
+  const admin = await requireAdminSession();
+  const isEnabled = getCheckbox(formData, "is_enabled");
+
+  const { error } = await admin.supabase.from("site_sections").upsert(
+    {
+      slug: "productos",
+      label: "Productos",
+      is_enabled: isEnabled,
+      updated_at: new Date().toISOString(),
+      updated_by: admin.userId,
+    },
+    { onConflict: "slug" },
+  );
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  revalidatePath("/");
+  revalidatePath("/productos");
+  revalidatePath("/admin");
+}
+
+export async function updateProduct(formData: FormData) {
+  const admin = await requireAdminSession();
+  const slug = getString(formData, "slug");
+  const title = getString(formData, "title");
+  const subtitle = getString(formData, "subtitle");
+  const price = getString(formData, "price");
+  const description = getString(formData, "description");
+
+  if (!slug) {
+    throw new Error("Producto inválido.");
+  }
+
+  if (!title || !subtitle || !price || !description) {
+    throw new Error("Completá el nombre, subtítulo, precio y descripción.");
+  }
+
+  const imagePath = await uploadImage(formData.get("image"), `products/${slug}`, admin.supabase);
+  const update: Record<string, string | boolean> = {
+    title,
+    subtitle,
+    price,
+    description,
+    image_alt: title,
+    is_active: getCheckbox(formData, "is_active"),
+    updated_at: new Date().toISOString(),
+    updated_by: admin.userId,
+  };
+
+  if (imagePath) {
+    update.image_path = imagePath;
+    const width = getPositiveInteger(formData, "image_width");
+    const height = getPositiveInteger(formData, "image_height");
+    if (width && height) {
+      update.image_width = String(width);
+      update.image_height = String(height);
+    }
+  }
+
+  const { error } = await admin.supabase.from("products").update(update).eq("slug", slug);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  revalidatePath("/productos");
   revalidatePath("/admin");
 }

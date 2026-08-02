@@ -7,6 +7,7 @@ const routes = [
   "/que-disenamos",
   "/que-disenamos/balcones-y-terrazas-verdes",
   "/proyectos",
+  "/productos",
   "/nuestra-mirada",
   "/contacto",
 ];
@@ -29,19 +30,21 @@ async function expectImagesLoaded(page: Page) {
   });
 
   await page.locator("img").evaluateAll(async (images) => {
+    const imageElements = images as HTMLImageElement[];
     await Promise.all(
-      images.map((image) => {
+      imageElements.map((image) => {
         if (image.complete && image.naturalWidth > 0) return Promise.resolve();
         return image.decode().catch(() => undefined);
       }),
     );
   });
 
-  const brokenImages = await page.locator("img").evaluateAll((images) =>
-    images
+  const brokenImages = await page.locator("img").evaluateAll((images) => {
+    const imageElements = images as HTMLImageElement[];
+    return imageElements
       .filter((image) => !image.complete || image.naturalWidth === 0 || image.naturalHeight === 0)
-      .map((image) => image.getAttribute("alt") || image.getAttribute("src") || "unknown"),
-  );
+      .map((image) => image.getAttribute("alt") || image.getAttribute("src") || "unknown");
+  });
 
   expect(brokenImages).toEqual([]);
 }
@@ -59,7 +62,7 @@ async function expectNoRevealScrollOverflow(page: Page) {
 
 async function expectFullLogosKeepRatio(page: Page) {
   const logos = await page.locator('img[alt="Palma - Diseño de Paisajes con Sentido"]').evaluateAll((images) =>
-    images.map((image) => {
+    (images as HTMLImageElement[]).map((image) => {
       const rect = image.getBoundingClientRect();
       return {
         width: rect.width,
@@ -145,10 +148,27 @@ test.describe("Palma public website", () => {
     await expect(menu).toHaveClass(/duration-300/);
     await expect(menu).toHaveClass(/max-h-96/);
     await expect(page.getByRole("link", { name: "Proyectos" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Productos" })).toBeVisible();
 
     await page.getByRole("link", { name: "Proyectos" }).click();
     await expect(page).toHaveURL(/\/proyectos$/);
     await expect(page.getByRole("heading", { name: "Estamos preparando esta sección" })).toBeVisible();
+  });
+
+  test("products page opens product detail modal", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    await page.goto("/productos");
+
+    await expect(page.getByRole("heading", { name: "Elementos para el paisaje" })).toBeVisible();
+    await page.getByRole("button", { name: /Banco de jard/ }).click();
+    await expect(page.getByRole("dialog")).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Banco de jard/ })).toBeVisible();
+    await expect(page.getByRole("link", { name: /Consultar por este producto/ })).toHaveAttribute(
+      "href",
+      /\/contacto\?producto=/,
+    );
+    await page.getByRole("button", { name: "Cerrar producto" }).click();
+    await expect(page.getByRole("dialog")).toHaveCount(0);
   });
 
   test("contact form shows thank-you state", async ({ page }) => {
