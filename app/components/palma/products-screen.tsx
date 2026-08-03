@@ -137,10 +137,13 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
 
 function ProductVisual({ product, large = false }: { product: Product; large?: boolean }) {
   const sizeClass = large ? "aspect-[4/3] w-full md:h-full md:min-h-[520px]" : "aspect-[4/3] w-full";
+  const frameClass = large
+    ? "border border-[#d8d3c8]"
+    : "border border-[#d8d3c8] transition-colors duration-300 group-hover:border-[#9f9a8f]";
 
   if (product.image) {
     return (
-      <span className={`relative block overflow-hidden bg-[#ece9e4] ${sizeClass}`}>
+      <span className={`relative block overflow-hidden bg-[#ece9e4] ${frameClass} ${sizeClass}`}>
         <Image
           src={product.image.src}
           alt={product.image.alt}
@@ -154,7 +157,7 @@ function ProductVisual({ product, large = false }: { product: Product; large?: b
 
   return (
     <span
-      className={`flex items-center justify-center overflow-hidden bg-[#f3f1eb] ${sizeClass}`}
+      className={`flex items-center justify-center overflow-hidden bg-[#f3f1eb] ${frameClass} ${sizeClass}`}
       style={{
         backgroundImage:
           "repeating-linear-gradient(135deg, #f7f5ef 0 12px, #ece9e2 12px 24px)",
