@@ -28,6 +28,11 @@ function getCheckbox(formData: FormData, key: string) {
   return formData.get(key) === "on";
 }
 
+function getSlug(formData: FormData, key: string) {
+  const slug = getString(formData, key).toLowerCase();
+  return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) ? slug : "";
+}
+
 function safeNextPath(value: string) {
   return value.startsWith("/") && !value.startsWith("//") ? value : "/admin";
 }
@@ -298,6 +303,59 @@ export async function updateProductsSectionAvailability(formData: FormData) {
   revalidatePath("/admin");
 }
 
+export async function createProduct(formData: FormData) {
+  const admin = await requireAdminSession();
+  const slug = getSlug(formData, "slug");
+  const title = getString(formData, "title");
+  const subtitle = getString(formData, "subtitle");
+  const price = getString(formData, "price");
+  const description = getString(formData, "description");
+  const sortOrder = getPositiveInteger(formData, "sort_order");
+
+  if (!slug) {
+    throw new Error("Usá un slug válido, en minúsculas y separado por guiones.");
+  }
+
+  if (!title || !subtitle || !price || !description || !sortOrder) {
+    throw new Error("Completá nombre, slug, subtítulo, precio, descripción y orden.");
+  }
+
+  const imagePath = await uploadImage(formData.get("image"), `products/${slug}`, admin.supabase);
+  const insert: Record<string, string | number | boolean> = {
+    slug,
+    title,
+    subtitle,
+    price,
+    description,
+    sort_order: sortOrder,
+    image_path: imagePath ?? "",
+    image_alt: title,
+    image_width: 1200,
+    image_height: 980,
+    is_active: getCheckbox(formData, "is_active"),
+    updated_at: new Date().toISOString(),
+    updated_by: admin.userId,
+  };
+
+  if (imagePath) {
+    const width = getPositiveInteger(formData, "image_width");
+    const height = getPositiveInteger(formData, "image_height");
+    if (width && height) {
+      insert.image_width = width;
+      insert.image_height = height;
+    }
+  }
+
+  const { error } = await admin.supabase.from("products").insert(insert);
+
+  if (error) {
+    throw new Error(error.code === "23505" ? "Ya existe un producto con ese slug." : error.message);
+  }
+
+  revalidatePath("/productos");
+  revalidatePath("/admin");
+}
+
 export async function updateProduct(formData: FormData) {
   const admin = await requireAdminSession();
   const slug = getString(formData, "slug");
@@ -340,6 +398,38 @@ export async function updateProduct(formData: FormData) {
 
   if (error) {
     throw new Error(error.message);
+  }
+
+  revalidatePath("/productos");
+  revalidatePath("/admin");
+}
+
+export async function deleteProduct(formData: FormData) {
+  const admin = await requireAdminSession();
+  const slug = getString(formData, "slug");
+
+  if (!slug) {
+    throw new Error("Producto inválido.");
+  }
+
+  const { data: product, error: readError } = await admin.supabase
+    .from("products")
+    .select("image_path")
+    .eq("slug", slug)
+    .single();
+
+  if (readError || !product) {
+    throw new Error(readError?.message ?? "Producto inválido.");
+  }
+
+  const { error } = await admin.supabase.from("products").delete().eq("slug", slug);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (product.image_path) {
+    await admin.supabase.storage.from(PALMA_IMAGE_BUCKET).remove([product.image_path]);
   }
 
   revalidatePath("/productos");

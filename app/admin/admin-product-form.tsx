@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
 import type { ProductRow } from "../lib/content";
 import { getPublicImageUrl } from "../lib/images";
-import { updateProduct } from "./actions";
+import { createProduct, deleteProduct, updateProduct } from "./actions";
 
 type UploadStatus =
   | { kind: "idle"; message: string }
@@ -16,6 +16,244 @@ type UploadStatus =
 const maxDimension = 1800;
 const quality = 0.82;
 const defaultStatus = "Las imágenes grandes se comprimen antes de subir.";
+
+type ProductFormValues = {
+  title: string;
+  subtitle: string;
+  price: string;
+  description: string;
+  isActive: boolean;
+};
+
+export function AdminCreateProductForm({ nextSortOrder }: { nextSortOrder: number }) {
+  const router = useRouter();
+  const formRef = useRef<HTMLFormElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isPending, startTransition] = useTransition();
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewSrc, setPreviewSrc] = useState<string | null>(null);
+  const [slugEdited, setSlugEdited] = useState(false);
+  const [status, setStatus] = useState<UploadStatus>({ kind: "idle", message: defaultStatus });
+  const [values, setValues] = useState<ProductFormValues>({
+    title: "",
+    subtitle: "",
+    price: "",
+    description: "",
+    isActive: true,
+  });
+  const [slug, setSlug] = useState("");
+  const [sortOrder, setSortOrder] = useState(String(nextSortOrder));
+
+  useEffect(() => {
+    return () => {
+      if (previewSrc) URL.revokeObjectURL(previewSrc);
+    };
+  }, [previewSrc]);
+
+  const setValue = (key: keyof ProductFormValues, value: string | boolean) => {
+    setValues((current) => ({ ...current, [key]: value }));
+  };
+
+  const handleTitleChange = (value: string) => {
+    setValue("title", value);
+    if (!slugEdited) {
+      setSlug(slugify(value));
+    }
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] ?? null;
+    setSelectedFile(file);
+    setStatus({
+      kind: "idle",
+      message: file ? "Previsualización lista. Se comprimirá al guardar." : defaultStatus,
+    });
+    setPreviewSrc((current) => {
+      if (current) URL.revokeObjectURL(current);
+      return file ? URL.createObjectURL(file) : null;
+    });
+  };
+
+  const resetForm = () => {
+    formRef.current?.reset();
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    setSelectedFile(null);
+    setValues({ title: "", subtitle: "", price: "", description: "", isActive: true });
+    setSlug("");
+    setSlugEdited(false);
+    setSortOrder(String(nextSortOrder + 1));
+    setPreviewSrc((current) => {
+      if (current) URL.revokeObjectURL(current);
+      return null;
+    });
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+
+    startTransition(async () => {
+      try {
+        setStatus({ kind: "working", message: "Creando producto..." });
+        const formData = new FormData(form);
+        const file = selectedFile;
+        let compressionMessage = "";
+
+        if (file && file.size > 0) {
+          const compressed = await compressImage(file);
+          formData.set("image", compressed.file);
+          formData.set("image_width", String(compressed.width));
+          formData.set("image_height", String(compressed.height));
+          compressionMessage = ` Comprimida de ${formatBytes(file.size)} a ${formatBytes(compressed.file.size)}.`;
+          setStatus({ kind: "working", message: compressionMessage.trim() });
+        }
+
+        await createProduct(formData);
+        resetForm();
+        router.refresh();
+        setStatus({ kind: "success", message: `Producto creado.${compressionMessage}` });
+      } catch (error) {
+        setStatus({
+          kind: "error",
+          message: error instanceof Error ? error.message : "No se pudo crear el producto.",
+        });
+      }
+    });
+  };
+
+  return (
+    <form
+      ref={formRef}
+      onSubmit={handleSubmit}
+      className="grid min-w-0 gap-4 border border-[#d8d3c8] bg-white/70 p-4"
+    >
+      <div className="grid gap-2 md:grid-cols-[minmax(0,1fr)_auto] md:items-start">
+        <div className="min-w-0">
+          <p className="text-[10px] font-normal uppercase tracking-[0.2em] text-[#a9a79c]">
+            Catálogo
+          </p>
+          <h3 className="mt-1 text-[20px] font-light italic leading-tight text-[#131419]">
+            Nuevo producto
+          </h3>
+        </div>
+        <label className="flex items-center gap-3 text-[11px] font-normal uppercase tracking-[0.16em] text-[#493f2c]">
+          <input
+            name="is_active"
+            type="checkbox"
+            checked={values.isActive}
+            onChange={(event) => setValue("isActive", event.target.checked)}
+            className="h-4 w-4 accent-[#4a6038]"
+          />
+          Visible
+        </label>
+      </div>
+
+      <div className="grid min-w-0 gap-4 lg:grid-cols-[220px_minmax(0,1fr)]">
+        <div className="relative aspect-[4/3] overflow-hidden border border-[#d8d3c8] bg-[#f3f1eb]">
+          {previewSrc ? (
+            <div
+              role="img"
+              aria-label={values.title || "Vista previa"}
+              className="absolute inset-0 bg-cover bg-center"
+              style={{ backgroundImage: `url("${previewSrc}")` }}
+            />
+          ) : (
+            <div
+              className="flex h-full items-center justify-center"
+              style={{
+                backgroundImage:
+                  "repeating-linear-gradient(135deg, #f7f5ef 0 12px, #ece9e2 12px 24px)",
+              }}
+            >
+              <span className="bg-[#f9f7f4] px-4 py-1.5 text-[11px] font-light lowercase tracking-[0.12em] text-[#9a9486]">
+                imagen pendiente
+              </span>
+            </div>
+          )}
+        </div>
+
+        <div className="grid min-w-0 gap-4">
+          <div className="grid min-w-0 gap-4 md:grid-cols-2">
+            <TextField label="Nombre" name="title" value={values.title} onChange={handleTitleChange} />
+            <TextField
+              label="Slug"
+              name="slug"
+              value={slug}
+              onChange={(value) => {
+                setSlugEdited(true);
+                setSlug(slugify(value));
+              }}
+            />
+            <TextField
+              label="Subtítulo"
+              name="subtitle"
+              value={values.subtitle}
+              onChange={(value) => setValue("subtitle", value)}
+            />
+            <TextField label="Precio" name="price" value={values.price} onChange={(value) => setValue("price", value)} />
+            <label className="grid gap-2 text-[10px] font-normal uppercase tracking-[0.18em] text-[#a9a79c]">
+              Orden
+              <input
+                name="sort_order"
+                type="number"
+                min="1"
+                required
+                value={sortOrder}
+                onChange={(event) => setSortOrder(event.target.value)}
+                className="min-w-0 border border-[#e0ddd7] bg-[#f9f7f4] px-3 py-3 text-sm font-light normal-case tracking-normal text-[#131419] outline-none focus:border-[#4a6038]"
+              />
+            </label>
+            <label className="grid gap-2 text-[10px] font-normal uppercase tracking-[0.18em] text-[#a9a79c]">
+              Imagen
+              <input
+                ref={fileInputRef}
+                name="image"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={handleFileChange}
+                className="block w-full max-w-full min-w-0 overflow-hidden text-[11px] font-light normal-case tracking-normal text-[#493f2c] file:mr-2 file:border-0 file:bg-[#4a6038] file:px-2.5 file:py-2 file:text-[10px] file:font-normal file:uppercase file:tracking-[0.1em] file:text-white sm:text-xs sm:file:mr-3 sm:file:px-3 sm:file:tracking-[0.12em]"
+              />
+            </label>
+          </div>
+
+          <label className="grid gap-2 text-[10px] font-normal uppercase tracking-[0.18em] text-[#a9a79c]">
+            Descripción
+            <textarea
+              name="description"
+              required
+              rows={4}
+              value={values.description}
+              onChange={(event) => setValue("description", event.target.value)}
+              className="min-w-0 resize-y border border-[#e0ddd7] bg-[#f9f7f4] px-3 py-3 text-sm font-light normal-case leading-relaxed tracking-normal text-[#131419] outline-none focus:border-[#4a6038]"
+            />
+          </label>
+
+          <div className="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-center">
+            <p
+              data-upload-status={status.kind}
+              className={`text-[11px] font-light leading-relaxed ${
+                status.kind === "error"
+                  ? "text-[#8a3f31]"
+                  : status.kind === "success"
+                    ? "text-[#4a6038]"
+                    : "text-[#777674]"
+              }`}
+            >
+              {status.message}
+            </p>
+            <button
+              type="submit"
+              disabled={isPending}
+              className="inline-flex min-h-11 min-w-0 items-center justify-center bg-[#4a6038] px-4 py-3 text-center text-[11px] font-normal uppercase tracking-[0.14em] text-white transition-colors hover:bg-[#3d5030] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4a6038]/45 disabled:cursor-wait disabled:bg-[#9a9486]"
+            >
+              {isPending ? "Creando..." : "Crear producto"}
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  );
+}
 
 export function AdminProductForm({ product }: { product: ProductRow }) {
   const router = useRouter();
@@ -123,6 +361,27 @@ export function AdminProductForm({ product }: { product: ProductRow }) {
       return null;
     });
     setStatus({ kind: "idle", message: "Cambios descartados." });
+  };
+
+  const handleDelete = () => {
+    if (!window.confirm(`Eliminar "${product.title}" del catálogo?`)) {
+      return;
+    }
+
+    startTransition(async () => {
+      try {
+        setStatus({ kind: "working", message: "Eliminando producto..." });
+        const formData = new FormData();
+        formData.set("slug", product.slug);
+        await deleteProduct(formData);
+        router.refresh();
+      } catch (error) {
+        setStatus({
+          kind: "error",
+          message: error instanceof Error ? error.message : "No se pudo eliminar el producto.",
+        });
+      }
+    });
   };
 
   return (
@@ -253,7 +512,7 @@ export function AdminProductForm({ product }: { product: ProductRow }) {
           </div>
 
           {isEditing ? (
-            <div className="grid min-w-0 gap-2 sm:grid-cols-2">
+            <div className="grid min-w-0 gap-2 sm:grid-cols-3">
               <button
                 type="button"
                 disabled={isPending}
@@ -261,6 +520,14 @@ export function AdminProductForm({ product }: { product: ProductRow }) {
                 className="inline-flex min-h-11 min-w-0 items-center justify-center border border-[#d8d3c8] px-3 py-3 text-center text-[11px] font-normal uppercase tracking-[0.12em] text-[#493f2c] transition-colors hover:border-[#131419] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#131419]/20 disabled:cursor-wait disabled:opacity-60 sm:px-4 sm:tracking-[0.16em]"
               >
                 Cancelar
+              </button>
+              <button
+                type="button"
+                disabled={isPending}
+                onClick={handleDelete}
+                className="inline-flex min-h-11 min-w-0 items-center justify-center border border-[#8a3f31] px-3 py-3 text-center text-[11px] font-normal uppercase tracking-[0.12em] text-[#8a3f31] transition-colors hover:bg-[#8a3f31] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#8a3f31]/30 disabled:cursor-wait disabled:opacity-60 sm:px-4 sm:tracking-[0.16em]"
+              >
+                {isPending ? "Eliminando..." : "Eliminar"}
               </button>
               {hasChanges ? (
                 <button
@@ -366,6 +633,16 @@ function loadImage(file: File) {
 
 function replaceExtension(fileName: string, extension: string) {
   return `${fileName.replace(/\.[^.]+$/, "")}.${extension}`;
+}
+
+function slugify(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .replace(/-{2,}/g, "-");
 }
 
 function formatBytes(bytes: number) {

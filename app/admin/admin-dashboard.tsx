@@ -1,10 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useTransition } from "react";
 import type { ReactNode } from "react";
 import type { HomeImageRow, PageImageRow, ProductRow, ProjectTypeRow, SiteSectionRow } from "../lib/content";
 import { AdminImageCard } from "./admin-image-card";
-import { AdminProductForm } from "./admin-product-form";
+import { AdminCreateProductForm, AdminProductForm } from "./admin-product-form";
 import { AdminProjectTypeText } from "./admin-project-type-text";
 import { updateHomeImage, updatePageImage, updateProductsSectionAvailability, updateProjectTypeImage } from "./actions";
 
@@ -25,6 +25,7 @@ export function AdminDashboard({
 }) {
   const [activeTab, setActiveTab] = useState<TabId>("home");
   const productsSection = siteSections.find((section) => section.slug === "productos");
+  const nextProductSortOrder = products.reduce((max, product) => Math.max(max, product.sort_order), 0) + 1;
 
   const tabs = useMemo(
     () => [
@@ -160,7 +161,11 @@ export function AdminDashboard({
 
         {activeTab === "productos" ? (
           <div className="grid gap-5">
-            <ProductsAvailabilityControl isEnabled={productsSection?.is_enabled ?? true} />
+            <ProductsAvailabilityControl
+              key={String(productsSection?.is_enabled ?? true)}
+              isEnabled={productsSection?.is_enabled ?? true}
+            />
+            <AdminCreateProductForm nextSortOrder={nextProductSortOrder} />
             <CardGrid dense>
               {products.length ? (
                 products.map((product) => <AdminProductForm key={product.slug} product={product} />)
@@ -212,9 +217,28 @@ export function AdminDashboard({
 }
 
 function ProductsAvailabilityControl({ isEnabled }: { isEnabled: boolean }) {
+  const [checked, setChecked] = useState(isEnabled);
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+  const hasChanges = checked !== isEnabled;
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+
+    startTransition(async () => {
+      try {
+        setError(null);
+        await updateProductsSectionAvailability(formData);
+      } catch (submitError) {
+        setError(submitError instanceof Error ? submitError.message : "No se pudo guardar la disponibilidad.");
+      }
+    });
+  };
+
   return (
     <form
-      action={updateProductsSectionAvailability}
+      onSubmit={handleSubmit}
       className="flex flex-col gap-4 border border-[#e0ddd7] bg-white/70 p-4 sm:flex-row sm:items-center sm:justify-between"
     >
       <div>
@@ -233,17 +257,27 @@ function ProductsAvailabilityControl({ isEnabled }: { isEnabled: boolean }) {
           <input
             name="is_enabled"
             type="checkbox"
-            defaultChecked={isEnabled}
+            checked={checked}
+            onChange={(event) => setChecked(event.target.checked)}
+            disabled={isPending}
             className="h-4 w-4 accent-[#4a6038]"
           />
           Disponible
         </label>
-        <button
-          type="submit"
-          className="inline-flex min-h-11 min-w-0 items-center justify-center bg-[#4a6038] px-4 py-3 text-center text-[11px] font-normal uppercase tracking-[0.14em] text-white transition-colors hover:bg-[#3d5030] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4a6038]/45"
-        >
-          Guardar estado
-        </button>
+        {error ? (
+          <p role="alert" className="max-w-52 text-right text-[11px] font-light leading-relaxed text-[#8a3f31]">
+            {error}
+          </p>
+        ) : null}
+        {hasChanges ? (
+          <button
+            type="submit"
+            disabled={isPending}
+            className="inline-flex min-h-11 min-w-0 items-center justify-center bg-[#4a6038] px-4 py-3 text-center text-[11px] font-normal uppercase tracking-[0.14em] text-white transition-colors hover:bg-[#3d5030] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4a6038]/45 disabled:cursor-wait disabled:bg-[#9a9486]"
+          >
+            {isPending ? "Guardando..." : "Guardar estado"}
+          </button>
+        ) : null}
       </div>
     </form>
   );
