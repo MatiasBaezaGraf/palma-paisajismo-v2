@@ -90,6 +90,12 @@ export function AdminCreateProductForm({ nextSortOrder }: { nextSortOrder: numbe
     });
   };
 
+  const handleCreateCancel = () => {
+    resetForm();
+    setStatus({ kind: "idle", message: defaultStatus });
+    setIsCreating(false);
+  };
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -162,18 +168,6 @@ export function AdminCreateProductForm({ nextSortOrder }: { nextSortOrder: numbe
             />
             Visible
           </label>
-          <button
-            type="button"
-            disabled={isPending}
-            onClick={() => {
-              resetForm();
-              setStatus({ kind: "idle", message: defaultStatus });
-              setIsCreating(false);
-            }}
-            className="text-[11px] font-normal uppercase tracking-[0.14em] text-[#777674] transition-colors hover:text-[#131419] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#131419]/20 disabled:cursor-wait disabled:opacity-60"
-          >
-            Cancelar
-          </button>
         </div>
       </div>
 
@@ -270,13 +264,23 @@ export function AdminCreateProductForm({ nextSortOrder }: { nextSortOrder: numbe
             >
               {status.message}
             </p>
-            <button
-              type="submit"
-              disabled={isPending}
-              className="inline-flex min-h-11 min-w-0 items-center justify-center bg-[#4a6038] px-4 py-3 text-center text-[11px] font-normal uppercase tracking-[0.14em] text-white transition-colors hover:bg-[#3d5030] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4a6038]/45 disabled:cursor-wait disabled:bg-[#9a9486]"
-            >
-              {isPending ? "Creando..." : "Crear producto"}
-            </button>
+            <div className="grid grid-cols-2 gap-2 sm:justify-self-end">
+              <button
+                type="button"
+                disabled={isPending}
+                onClick={handleCreateCancel}
+                className="inline-flex min-h-11 min-w-0 items-center justify-center border border-[#d8d3c8] px-4 py-3 text-center text-[11px] font-normal uppercase tracking-[0.14em] text-[#493f2c] transition-colors hover:border-[#131419] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#131419]/20 disabled:cursor-wait disabled:opacity-60"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                disabled={isPending}
+                className="inline-flex min-h-11 min-w-0 items-center justify-center bg-[#4a6038] px-4 py-3 text-center text-[11px] font-normal uppercase tracking-[0.14em] text-white transition-colors hover:bg-[#3d5030] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4a6038]/45 disabled:cursor-wait disabled:bg-[#9a9486]"
+              >
+                {isPending ? "Creando..." : "Crear producto"}
+              </button>
+            </div>
           </div>
         </div>
       </div>
