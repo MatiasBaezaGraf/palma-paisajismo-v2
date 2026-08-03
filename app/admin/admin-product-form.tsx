@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
 import type { ProductRow } from "../lib/content";
 import { getPublicImageUrl } from "../lib/images";
+import { AdminConfirmationDialog } from "./admin-confirmation-dialog";
 import { createProduct, deleteProduct, updateProduct } from "./actions";
 
 type UploadStatus =
@@ -30,6 +31,7 @@ export function AdminCreateProductForm({ nextSortOrder }: { nextSortOrder: numbe
   const formRef = useRef<HTMLFormElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isPending, startTransition] = useTransition();
+  const [isCreating, setIsCreating] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewSrc, setPreviewSrc] = useState<string | null>(null);
   const [slugEdited, setSlugEdited] = useState(false);
@@ -111,6 +113,7 @@ export function AdminCreateProductForm({ nextSortOrder }: { nextSortOrder: numbe
         await createProduct(formData);
         resetForm();
         router.refresh();
+        setIsCreating(false);
         setStatus({ kind: "success", message: `Producto creado.${compressionMessage}` });
       } catch (error) {
         setStatus({
@@ -120,6 +123,18 @@ export function AdminCreateProductForm({ nextSortOrder }: { nextSortOrder: numbe
       }
     });
   };
+
+  if (!isCreating) {
+    return (
+      <button
+        type="button"
+        onClick={() => setIsCreating(true)}
+        className="inline-flex min-h-11 w-full items-center justify-center border border-[#4a6038] px-4 py-3 text-center text-[11px] font-normal uppercase tracking-[0.14em] text-[#4a6038] transition-colors hover:bg-[#4a6038] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4a6038]/45"
+      >
+        Crear producto
+      </button>
+    );
+  }
 
   return (
     <form
@@ -136,16 +151,30 @@ export function AdminCreateProductForm({ nextSortOrder }: { nextSortOrder: numbe
             Nuevo producto
           </h3>
         </div>
-        <label className="flex items-center gap-3 text-[11px] font-normal uppercase tracking-[0.16em] text-[#493f2c]">
-          <input
-            name="is_active"
-            type="checkbox"
-            checked={values.isActive}
-            onChange={(event) => setValue("isActive", event.target.checked)}
-            className="h-4 w-4 accent-[#4a6038]"
-          />
-          Visible
-        </label>
+        <div className="flex flex-wrap items-center gap-4 md:justify-end">
+          <label className="flex items-center gap-3 text-[11px] font-normal uppercase tracking-[0.16em] text-[#493f2c]">
+            <input
+              name="is_active"
+              type="checkbox"
+              checked={values.isActive}
+              onChange={(event) => setValue("isActive", event.target.checked)}
+              className="h-4 w-4 accent-[#4a6038]"
+            />
+            Visible
+          </label>
+          <button
+            type="button"
+            disabled={isPending}
+            onClick={() => {
+              resetForm();
+              setStatus({ kind: "idle", message: defaultStatus });
+              setIsCreating(false);
+            }}
+            className="text-[11px] font-normal uppercase tracking-[0.14em] text-[#777674] transition-colors hover:text-[#131419] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#131419]/20 disabled:cursor-wait disabled:opacity-60"
+          >
+            Cancelar
+          </button>
+        </div>
       </div>
 
       <div className="grid min-w-0 gap-4 lg:grid-cols-[220px_minmax(0,1fr)]">
@@ -261,6 +290,7 @@ export function AdminProductForm({ product }: { product: ProductRow }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isPending, startTransition] = useTransition();
   const [isEditing, setIsEditing] = useState(false);
+  const [isDeleteConfirming, setIsDeleteConfirming] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewSrc, setPreviewSrc] = useState<string | null>(null);
   const [status, setStatus] = useState<UploadStatus>({ kind: "idle", message: defaultStatus });
@@ -364,16 +394,13 @@ export function AdminProductForm({ product }: { product: ProductRow }) {
   };
 
   const handleDelete = () => {
-    if (!window.confirm(`Eliminar "${product.title}" del catálogo?`)) {
-      return;
-    }
-
     startTransition(async () => {
       try {
         setStatus({ kind: "working", message: "Eliminando producto..." });
         const formData = new FormData();
         formData.set("slug", product.slug);
         await deleteProduct(formData);
+        setIsDeleteConfirming(false);
         router.refresh();
       } catch (error) {
         setStatus({
@@ -385,7 +412,8 @@ export function AdminProductForm({ product }: { product: ProductRow }) {
   };
 
   return (
-    <form
+    <>
+      <form
       ref={formRef}
       onSubmit={handleSubmit}
       data-editing={isEditing ? "true" : "false"}
@@ -512,7 +540,7 @@ export function AdminProductForm({ product }: { product: ProductRow }) {
           </div>
 
           {isEditing ? (
-            <div className="grid min-w-0 gap-2 sm:grid-cols-3">
+            <div className="grid min-w-0 grid-cols-2 gap-2">
               <button
                 type="button"
                 disabled={isPending}
@@ -520,14 +548,6 @@ export function AdminProductForm({ product }: { product: ProductRow }) {
                 className="inline-flex min-h-11 min-w-0 items-center justify-center border border-[#d8d3c8] px-3 py-3 text-center text-[11px] font-normal uppercase tracking-[0.12em] text-[#493f2c] transition-colors hover:border-[#131419] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#131419]/20 disabled:cursor-wait disabled:opacity-60 sm:px-4 sm:tracking-[0.16em]"
               >
                 Cancelar
-              </button>
-              <button
-                type="button"
-                disabled={isPending}
-                onClick={handleDelete}
-                className="inline-flex min-h-11 min-w-0 items-center justify-center border border-[#8a3f31] px-3 py-3 text-center text-[11px] font-normal uppercase tracking-[0.12em] text-[#8a3f31] transition-colors hover:bg-[#8a3f31] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#8a3f31]/30 disabled:cursor-wait disabled:opacity-60 sm:px-4 sm:tracking-[0.16em]"
-              >
-                {isPending ? "Eliminando..." : "Eliminar"}
               </button>
               {hasChanges ? (
                 <button
@@ -540,17 +560,40 @@ export function AdminProductForm({ product }: { product: ProductRow }) {
               ) : null}
             </div>
           ) : (
-            <button
-              type="button"
-              onClick={() => setIsEditing(true)}
-              className="inline-flex min-h-11 min-w-0 items-center justify-center border border-[#131419] px-3 py-3 text-center text-[11px] font-normal uppercase tracking-[0.12em] text-[#131419] transition-colors hover:bg-[#131419] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#131419]/20 sm:px-4 sm:tracking-[0.16em]"
-            >
-              Editar
-            </button>
+            <div className="grid min-w-0 grid-cols-2 gap-2">
+              <button
+                type="button"
+                disabled={isPending}
+                onClick={() => setIsEditing(true)}
+                className="inline-flex min-h-11 min-w-0 items-center justify-center border border-[#131419] px-3 py-3 text-center text-[11px] font-normal uppercase tracking-[0.12em] text-[#131419] transition-colors hover:bg-[#131419] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#131419]/20 disabled:cursor-wait disabled:opacity-60 sm:px-4 sm:tracking-[0.16em]"
+              >
+                Editar
+              </button>
+              <button
+                type="button"
+                disabled={isPending}
+                onClick={() => setIsDeleteConfirming(true)}
+                className="inline-flex min-h-11 min-w-0 items-center justify-center border border-[#8a3f31] px-3 py-3 text-center text-[11px] font-normal uppercase tracking-[0.12em] text-[#8a3f31] transition-colors hover:bg-[#8a3f31] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#8a3f31]/30 disabled:cursor-wait disabled:opacity-60 sm:px-4 sm:tracking-[0.16em]"
+              >
+                Eliminar
+              </button>
+            </div>
           )}
         </div>
       </div>
-    </form>
+      </form>
+      <AdminConfirmationDialog
+        isOpen={isDeleteConfirming}
+        isPending={isPending}
+        title="Eliminar producto?"
+        description={`"${product.title}" se eliminara del catalogo y no podra recuperarse.`}
+        confirmLabel="Eliminar"
+        pendingLabel="Eliminando..."
+        destructive
+        onCancel={() => setIsDeleteConfirming(false)}
+        onConfirm={handleDelete}
+      />
+    </>
   );
 }
 
